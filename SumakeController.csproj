@@ -50,6 +50,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bak\CommunicationCommands.cs" />
+    <Compile Include="bak\JulianDay.cs" />
     <Compile Include="Screens\IOCard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,9 +138,7 @@
   <ItemGroup>
     <None Include="Resources\icons8-close-96-tab-red.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Files\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\icons8-chip-white-24.png" />
   </ItemGroup>
