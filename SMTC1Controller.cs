@@ -14,6 +14,7 @@ using System.Globalization;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
+using System.Management;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -299,11 +300,7 @@ namespace SumakeController
                 }
                 else if (sender == buttonSettings)
                 {
-                    bool ok = false;
-                    foreach (Control control in panelContent.Controls)
-                        if (control is System.Windows.Forms.Form && serialPort.IsOpen && ((System.Windows.Forms.Form)control) is Screens.Monitoring)
-                            ok = true;
-                    if(ok)
+                    if(SearchPanelContent(typeof(Screens.Monitoring)) && serialPort.IsOpen)
                     {
                         OpenChildForm(new Screens.Settings(serialPort),sender);
                         SetButtonColors((System.Windows.Forms.Button)sender);
@@ -315,20 +312,40 @@ namespace SumakeController
                 }
                 else if (sender == buttonIOCard)
                 {
-                    OpenChildForm(new Screens.IOCard(), sender);
-                    SetButtonColors((System.Windows.Forms.Button)sender);
+                    if (SearchUSBIO("VID_1809&PID_5862"))
+                    {
+                        OpenChildForm(new Screens.IOCard(), sender);
+                        SetButtonColors((System.Windows.Forms.Button)sender);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Conecte el dispositivo.", "Dispositivo desconectado.", MessageBoxButtons.OK);
+                    }
                 }
             }
-            /*
-            Console.Write("buttonMenu_Click:");
-            Console.WriteLine(panelContent.Controls.Count);
-            foreach (Control control in panelContent.Controls)
-            {
-                Console.WriteLine(((Control)control).GetType());
-            }
-             */
         }
-        
+
+        private bool SearchUSBIO(string name)
+        {
+            var usbDevices = USBDeviceInfo.GetUSBDevices();
+            foreach (var usbDevice in usbDevices)
+            {
+                Console.WriteLine("Device ID: {0}, PNP Device ID: {1}, Description: {2}",
+                    usbDevice.DeviceID, usbDevice.PnpDeviceID, usbDevice.Description);
+                Console.WriteLine(usbDevice.DeviceID.Contains(name));
+                if (usbDevice.DeviceID.Contains(name)) return true;
+            }
+            return false;
+        }
+
+        private bool SearchPanelContent(Type type)
+        {
+            foreach (Control control in panelContent.Controls)
+                if (control is System.Windows.Forms.Form && ((System.Windows.Forms.Form)control) is Screens.Monitoring)
+                    return true;
+            return false;
+        }
+
         /// <summary>
         /// Capture the mouse movement in the label title for move the window across the screen.
         /// </summary>
