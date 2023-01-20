@@ -64,6 +64,8 @@ namespace SumakeController
     enum StartSignalMode { Motor, Trigger }
     enum InternetSettings { WIFI, LAN, RS232 }
     enum ScrewdriverStatus { DisableBoth, EnableFWD, EnableREV, EnableBoth }
+    enum TargetCondition { NA, Thread, Torque }
+    enum Direction { CW, CCW }
     public partial class SMTC1Controller : Form
     {
         private SMTC1RS232 serialPort;
@@ -92,8 +94,12 @@ namespace SumakeController
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             serialPort = new SMTC1RS232(this);
             //usb5862 = new USB5862("USB-5862,BID#1");
-        //STYLES
-        ThemeColor();
+            //STYLES
+            ThemeColor();
+            /*
+            EAACTDSRS232 eaaSerial = new EAACTDSRS232(this);
+            eaaSerial.showmethemagic();
+             */
         }
 
         #region FORM THEME

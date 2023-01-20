@@ -91,6 +91,7 @@
     <Compile Include="Screens\Settings.Designer.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="EAACTDSRS232.cs" />
     <Compile Include="Theme.cs" />
     <Compile Include="JulianDate.cs" />
     <Compile Include="Serie.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -14,17 +15,97 @@ using System.Windows.Input;
 
 namespace SumakeController
 {
-    public class SMTC1RS232
+    public class EAACTDSRS232
     {
+        //EAACTDS PROPS
+        private enum CMD
+        {
+            [Description("REQUEST CURRENT STATUS")] CMD0,
+            [Description("COMMAND PROGRAM PARAMETER SETTINGS")] CMD2,
+            [Description("COMMAND CONTROLLER PARAMETER SETTINGS")] CMD3,
+            [Description("COMMAND SCREW COUNT TO ZERO")] CMD4,
+            [Description("COMMAND CONFIRM (ENABLE NG STOP/OKALL STOP)")] CMD5,
+            [Description("COMMAND SELECT SCREWDRIVER & PROGRAM")] CMD6,
+            [Description("READ CONTROLLER PROGRAM STATUS")] CMD7,
+            [Description("READ CONTROLLER PARAMETER")] CMD8,
+            [Description("COMMAND STD MODE ALL SEQUENCE")] CMD10,
+            [Description("READ STD MODE CURRENT SEQUENCE")] CMD11,
+            [Description("READ SCREWDRIVER STATUS")] CMD16,
+            [Description("ENABLE/DISABLE")] CMD51,
+            [Description("RESET CONTROLLER")] CMD52,
+            [Description("SETTING CONTROLLER PASSWORD")] CMD53,
+            [Description("READ CONTROLLER PASSWORD")] CMD54,
+            [Description("BARCODE")] CMD55,
+            [Description("READ SCANNER PARAMETER SETTING")] CMD56,
+            [Description("COMMAND FILTER SETTING")] CMD57,
+            [Description("READ FILTER PARAMTER")] CMD58,
+            [Description("COMMAND THREAD FINDING STATUS")] CMD59,
+            [Description("READ THREAD FINDING STATUS")] CMD60,
+        }
+        private enum ReverseMode { EACH, ONCE }
+        private enum BatchMode { [Description("Decrease")] DEC, [Description("Increase")] INC }
+        private enum BrakeSignal { Release, Keep }
+        private enum TorqueUnit { Nm, Kgf_cm, lbf_in, kgf_m }
+        private enum GateMode { Once, Twice, Once_Confirm, Twice_Confirm }
+        private enum SequenceMode { Off, Single, Multi }
+        private enum ThreadFinding { Off, On }
+        private enum Mode { ADV, STD, ALI, SET }
+        private int aMSStepSequence = 1;
+        private int aMSStepID = 0;
+        private int program;
+        private int toolInfo;
+        private int batchCount;
+        private float highTorque;
+        private float lowTorque;
+        private float highThread;
+        private float lowThread;
+        private float highTime;
+        private float lowTime;
+        private float torqueOffset;
+        private int gearRatio;
+        private int slowStartSpeed;
+        private float slowStartTime;
+        private float reconfirmTime;
+        private float okAllAlarmTime;
+        private float autoStopTime;
+        private float runReverseTime;
+        private float reverseSuspendTime;
+        private float autoReverseTime;
+        private int nOkStop;
+        private int okAllStop;
+        private int remainingScrews;
+        private float okOneTime;
+        private int countThread;
+        private static int SafeData = 5438;
+        private string screwDriverStatus;
+        private string ioStatus;
+        private int programStart;
+        private int endOfProgram;
+        private int programStep1;
+        private int toolInfo1;
+        private int unit;
+        private int yearCalibrationTime;
+        private int monthCalibrationTime;
+        private int dayCalibrationTime;
+        private int hourCalibrationTime;
+        private int minuteCalibrationTime;
+
+        private string screwdriverIDCode = "SMT0121070001A";
+
+        public void showmethemagic()
+        {
+            Console.WriteLine(CMD.CMD0);
+            Console.WriteLine(CMD.CMD0.ToString());
+        }
+        
         /*PROPERTIES*/
         private string tempBuffer;
         private SerialPort serialPort = new SerialPort();
         private String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private string temporalListen = "";
-        private string screwdriverIDCode = "SMT0121070001A";
         private string controllerIDCode = "2106001A";
         /// <summary>Mode options:<para>0: ADV, 1: STD, 2: ALI, 3: SET</para></summary>
-        private Mode mode = Mode.STD;
+        //private Mode mode = Mode.STD;
         private int job;
         private int jobSequence;
         private int selectScrewDriver = 1;
@@ -42,7 +123,7 @@ namespace SumakeController
         private string toolSerial = "";
         private int deviceName = 0;
         private int totalScrews = 0;
-        private int remainingScrews = 0;
+        //private int remainingScrews = 0;
         private Unused unused = SumakeController.Unused.Default;
 
         private int tighteningStep = 1;
@@ -59,10 +140,10 @@ namespace SumakeController
         private float lowerTorqueLimit = 0;
         
         #region Controller default configurations
-        private TorqueUnit torqueUnit = TorqueUnit.Lbin;
-        private GateMode gateMode = GateMode.Off;
+        //private TorqueUnit torqueUnit = TorqueUnit.Lbin;
+        //private GateMode gateMode = GateMode.Off;
         private OkAllSignal okAllSignal = OkAllSignal.Each;
-        private BatchMode batchMode = BatchMode.Increase;
+        //private BatchMode batchMode = BatchMode.Increase;
         private InternetSettings internetSettings = InternetSettings.RS232;
         private BuzzerMode buzzerMode = BuzzerMode.On;
         private Language language = Language.English;
@@ -75,7 +156,7 @@ namespace SumakeController
         private StartSignalMode startSignalMode = StartSignalMode.Trigger;
         #endregion
         private SMTC1Controller sMTC1Controller;
-        public SMTC1RS232(SMTC1Controller sMTC1Controller)
+        public EAACTDSRS232(SMTC1Controller sMTC1Controller)
         {
             this.sMTC1Controller = sMTC1Controller;
             serialPort.DataReceived += new SerialDataReceivedEventHandler(Port_Listener);
@@ -159,7 +240,7 @@ namespace SumakeController
             DeviceID = Int32.Parse(parameters[11]);
             ScrewdriverIDCode = parameters[12];
             ControllerIDCode = parameters[13];
-            GateMode = (GateMode) Int32.Parse(parameters[14]);
+            //GateMode = (GateMode) Int32.Parse(parameters[14]);
             Job = Int32.Parse(parameters[15]);
             JobSequence = Int32.Parse(parameters[16]);
             SelectScrewDriver = Int32.Parse(parameters[18]);
@@ -188,10 +269,12 @@ namespace SumakeController
         /// </summary>
         public void CMD103()
         {
+            /*
             Time time = new Time();
             string command = String.Format("CMD103" + stringCommandHelper(24),time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, deviceID, (int)TorqueUnit, (int)GateMode, (int)Mode, (int)OkAllSignal, (int)BatchMode, (int)InternetSettings, (int)BuzzerMode, (int)Language, (int)Unused, (int)LedMode, (int)StartMode, (int)BarcodeEnable, (int)StartSignalMode, InstructionNumber);
             Console.WriteLine(command);
             Write("{" + command + "}");
+             */
         }
         public void CMD121()
         {
@@ -257,11 +340,11 @@ namespace SumakeController
         private void ANS108(string[] parameters)
         {
             BarcodeEnable = (BarcodeEnable)Int32.Parse(parameters[9]);
-            BatchMode = (BatchMode)Int32.Parse(parameters[10]);
+            //BatchMode = (BatchMode)Int32.Parse(parameters[10]);
             DeviceID = Int32.Parse(parameters[11]);
-            TorqueUnit = (TorqueUnit)Int32.Parse(parameters[12]);
-            GateMode = (GateMode)Int32.Parse(parameters[13]);
-            Mode = (Mode)Int32.Parse(parameters[14]);
+            //TorqueUnit = (TorqueUnit)Int32.Parse(parameters[12]);
+            //GateMode = (GateMode)Int32.Parse(parameters[13]);
+            //Mode = (Mode)Int32.Parse(parameters[14]);
             StartSignalMode = (StartSignalMode)Int32.Parse(parameters[15]);
             ScrewdriverStatus108 = (ScrewdriverStatus)Int32.Parse(parameters[17]);
             OkAllSignal = (OkAllSignal)Int32.Parse(parameters[19]);
@@ -340,15 +423,15 @@ namespace SumakeController
         public string ToolSerial { get => toolSerial; set => toolSerial = value; }
         internal Language Language { get => language; set => language = value; }
         internal OkAllSignal OkAllSignal { get => okAllSignal; set => okAllSignal = value; }
-        internal BatchMode BatchMode { get => batchMode; set => batchMode = value; }
-        internal TorqueUnit TorqueUnit { get => torqueUnit; set => torqueUnit = value; }
-        internal GateMode GateMode { get => gateMode; set => gateMode = value; }
+        //internal BatchMode BatchMode { get => batchMode; set => batchMode = value; }
+        //internal TorqueUnit TorqueUnit { get => torqueUnit; set => torqueUnit = value; }
+        //internal GateMode GateMode { get => gateMode; set => gateMode = value; }
         internal BuzzerMode BuzzerMode { get => buzzerMode; set => buzzerMode = value; }
         internal LedMode LedMode { get => ledMode; set => ledMode = value; }
         internal StartMode StartMode { get => startMode; set => startMode = value; }
         internal BarcodeEnable BarcodeEnable { get => barcodeEnable; set => barcodeEnable = value; }
         internal StartSignalMode StartSignalMode { get => startSignalMode; set => startSignalMode = value; }
-        internal Mode Mode { get => mode; set => mode = value; }
+        //internal Mode Mode { get => mode; set => mode = value; }
         internal Unused Unused { get => unused; set => unused = value; }
         internal InternetSettings InternetSettings { get => internetSettings; set => internetSettings = value; }
         internal ScrewdriverStatus ScrewdriverStatus108 { get => screwdriverStatus108; set => screwdriverStatus108 = value; }

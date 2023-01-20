@@ -99,6 +99,8 @@ namespace SumakeController.Screens
             if (sumakeSerial.IsOpen) btnOpenPort.Text = "&Close Port";
             else btnOpenPort.Text = "&Open Port";
             if (sumakeSerial.IsOpen) sumakeSerial.CMD100();
+
+            sumakeSerial.CMD121();
         }
         /// <summary>
         /// Changing Job and JobSequence for the Sumake.
