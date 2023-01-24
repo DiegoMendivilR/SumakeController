@@ -69,7 +69,6 @@ namespace SumakeController
     public partial class SMTC1Controller : Form
     {
         private SMTC1RS232 serialPort;
-        private USB5862 usb5862;
         private Serie serie = new Serie();
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private Form activeForm;

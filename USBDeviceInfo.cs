@@ -28,7 +28,6 @@ namespace SumakeController
 
             foreach (var device in collection)
             {
-                //foreach(PropertyData property in device.Properties) Console.WriteLine(property.Name+ ": " + property.Value);
                 devices.Add(new USBDeviceInfo(
                 (string)device.GetPropertyValue("DeviceID"),
                 (string)device.GetPropertyValue("PNPDeviceID"),

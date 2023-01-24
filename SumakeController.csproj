@@ -106,7 +106,7 @@
     <Compile Include="SMTC1RS232.cs" />
     <Compile Include="ThreadHelperClass.cs" />
     <Compile Include="Time.cs" />
-    <Compile Include="USB5862.cs" />
+    <Compile Include="UsbDaq.cs" />
     <Compile Include="USBDeviceInfo.cs" />
     <EmbeddedResource Include="Screens\IOCard.resx">
       <DependentUpon>IOCard.cs</DependentUpon>
