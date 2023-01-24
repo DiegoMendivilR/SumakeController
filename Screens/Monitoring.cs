@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SumakeController.Screens
+namespace CESATAutomationDevelop.Screens
 {
     public partial class Monitoring : Form
     {

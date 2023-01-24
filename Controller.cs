@@ -24,13 +24,13 @@ using System.Configuration;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using SumakeController.Properties;
+using CESATAutomationDevelop.Properties;
 using System.Resources;
-using SumakeController.Screens;
+using CESATAutomationDevelop.Screens;
 using System.CodeDom;
 using System.Media;
 
-namespace SumakeController
+namespace CESATAutomationDevelop
 {
     enum DeviceName { AMS, DAS }
     enum BatchMode { Decrease, Increase }
@@ -66,7 +66,7 @@ namespace SumakeController
     enum ScrewdriverStatus { DisableBoth, EnableFWD, EnableREV, EnableBoth }
     enum TargetCondition { NA, Thread, Torque }
     enum Direction { CW, CCW }
-    public partial class SMTC1Controller : Form
+    public partial class Controller : Form
     {
         private SMTC1RS232 serialPort;
         private Serie serie = new Serie();
@@ -85,7 +85,7 @@ namespace SumakeController
         private const int cCaption = 32;
         #endregion
 
-        public SMTC1Controller()
+        public Controller()
         {
             InitializeComponent();
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;

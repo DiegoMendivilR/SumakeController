@@ -8,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace SumakeController
+namespace CESATAutomationDevelop
 {
     internal class CommunicationCommands
     {
@@ -54,7 +54,7 @@ namespace SumakeController
         public int TotalScrews { get => totalScrews; set => totalScrews = value; }
         public int RemainingScrews { get => remainingScrews; set => remainingScrews = value; }
 
-        internal void Listener(string data, SMTC1Controller sMTC1Controller)
+        internal void Listener(string data, Controller sMTC1Controller)
         {
             if (TemporalListen != data)
             {
@@ -70,7 +70,7 @@ namespace SumakeController
             }
         }
 
-        private void REQ100(string[] parameters, SMTC1Controller sMTC1Controller)
+        private void REQ100(string[] parameters, Controller sMTC1Controller)
         {
             DeviceID = Int32.Parse(parameters[11]);
             ScrewdriverIDCode = parameters[12];
@@ -117,7 +117,7 @@ namespace SumakeController
         }
         
 
-        private async void DATA100(string[] parameters, SMTC1Controller sMTC1Controller)
+        private async void DATA100(string[] parameters, Controller sMTC1Controller)
         {
             var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})",parameters[10],parameters[11],parameters[12],parameters[14],parameters[15],parameters[16],parameters[17],parameters[20],parameters[21],parameters[22],Int32.Parse(parameters[23].Substring(0, 2)),Int32.Parse(parameters[23].Substring(3)),parameters[25],parameters[26],sMTC1Controller.getIDSerie());
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -128,7 +128,7 @@ namespace SumakeController
             }
         }
 
-        private void DATA101(string[] parameters, SMTC1Controller sMTC1Controller)
+        private void DATA101(string[] parameters, Controller sMTC1Controller)
         {
             TemporalListen = "";
             sMTC1Controller.updateTorque(parameters[1]);

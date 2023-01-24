@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{104F6571-0F2B-4E51-BCF1-1FBEA1B981B3}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>SumakeController</RootNamespace>
-    <AssemblyName>SumakeController</AssemblyName>
+    <RootNamespace>CESATAutomationDevelop</RootNamespace>
+    <AssemblyName>CESATAutomationDevelop</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -95,11 +95,11 @@
     <Compile Include="Theme.cs" />
     <Compile Include="JulianDate.cs" />
     <Compile Include="Serie.cs" />
-    <Compile Include="SMTC1Controller.cs">
+    <Compile Include="Controller.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SMTC1Controller.Designer.cs">
-      <DependentUpon>SMTC1Controller.cs</DependentUpon>
+    <Compile Include="Controller.Designer.cs">
+      <DependentUpon>Controller.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -117,8 +117,8 @@
     <EmbeddedResource Include="Screens\Settings.resx">
       <DependentUpon>Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SMTC1Controller.resx">
-      <DependentUpon>SMTC1Controller.cs</DependentUpon>
+    <EmbeddedResource Include="Controller.resx">
+      <DependentUpon>Controller.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

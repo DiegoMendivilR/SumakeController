@@ -5,7 +5,7 @@ using System.Management;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SumakeController
+namespace CESATAutomationDevelop
 {
     public class USBDeviceInfo
     {

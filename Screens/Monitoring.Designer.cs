@@ -1,4 +1,4 @@
-﻿namespace SumakeController.Screens
+﻿namespace CESATAutomationDevelop.Screens
 {
     partial class Monitoring
     {

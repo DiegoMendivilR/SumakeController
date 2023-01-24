@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 
-namespace SumakeController
+namespace CESATAutomationDevelop
 {
-    partial class SMTC1Controller
+    partial class Controller
     {
         /// <summary>
         /// Required designer variable.
@@ -30,7 +30,7 @@ namespace SumakeController
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SMTC1Controller));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Controller));
             this.panelMenu = new System.Windows.Forms.Panel();
             this.buttonIOCard = new System.Windows.Forms.Button();
             this.buttonFixture = new System.Windows.Forms.Button();
@@ -70,7 +70,7 @@ namespace SumakeController
             this.buttonIOCard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonIOCard.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonIOCard.ForeColor = System.Drawing.Color.White;
-            this.buttonIOCard.Image = global::SumakeController.Properties.Resources.icons8_chip_white_24;
+            this.buttonIOCard.Image = global::CESATAutomationDevelop.Properties.Resources.icons8_chip_white_24;
             this.buttonIOCard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonIOCard.Location = new System.Drawing.Point(0, 262);
             this.buttonIOCard.Name = "buttonIOCard";

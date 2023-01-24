@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SumakeController.Screens
+namespace CESATAutomationDevelop.Screens
 {
     public partial class IOCard : Form
     {

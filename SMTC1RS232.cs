@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-namespace SumakeController
+namespace CESATAutomationDevelop
 {
     public class SMTC1RS232
     {
@@ -33,7 +33,7 @@ namespace SumakeController
         private string controllerVersion = "1.017";
         private string screwdriverVersion = "1.15";
         private int screwdriverStatus = 0;
-        private ScrewdriverStatus screwdriverStatus108 = SumakeController.ScrewdriverStatus.DisableBoth;
+        private ScrewdriverStatus screwdriverStatus108 = CESATAutomationDevelop.ScrewdriverStatus.DisableBoth;
         private char nsasstatus = '0';
         private int instructionNumber = 1;
         /// <summary>DeviceName options:<para>0: AMS, 1: DAS</para><para>(Default is 0 for RS232 commands)</para></summary>
@@ -43,7 +43,7 @@ namespace SumakeController
         private int deviceName = 0;
         private int totalScrews = 0;
         private int remainingScrews = 0;
-        private Unused unused = SumakeController.Unused.Default;
+        private Unused unused = CESATAutomationDevelop.Unused.Default;
 
         private int tighteningStep = 1;
         private string stepName = "";
@@ -74,8 +74,8 @@ namespace SumakeController
         /// <summary>startSignalMode options: 0:Motor (default) 1:Trigger. Only from V1.009</summary>
         private StartSignalMode startSignalMode = StartSignalMode.Trigger;
         #endregion
-        private SMTC1Controller sMTC1Controller;
-        public SMTC1RS232(SMTC1Controller sMTC1Controller)
+        private Controller sMTC1Controller;
+        public SMTC1RS232(Controller sMTC1Controller)
         {
             this.sMTC1Controller = sMTC1Controller;
             serialPort.DataReceived += new SerialDataReceivedEventHandler(Port_Listener);
