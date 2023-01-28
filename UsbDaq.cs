@@ -15,13 +15,13 @@ namespace CESATAutomationDevelop
         private InstantDoCtrl dOut = new InstantDoCtrl();
         DeviceInformation deviceInformation;
         private ErrorCode errorCode = ErrorCode.Success;
+        public EventHandler Port0Update;
+        public EventHandler Port1Update;
         private bool stopMonitoring = true;
         private byte temp0;
         private byte temp1;
         byte dataPort0;
         byte dataPort1;
-        public EventHandler Port0Update;
-        public EventHandler Port1Update;
         public UsbDaq(String deviceDescription)
         {
             deviceInformation = new DeviceInformation(deviceDescription);
@@ -31,7 +31,7 @@ namespace CESATAutomationDevelop
         }
         protected virtual void OnPort0Update(EventArgs e) => Port0Update?.Invoke(this, e);
         protected virtual void OnPort1Update(EventArgs e) => Port1Update?.Invoke(this, e);
-        public async void MonitoringInput()
+        private async void MonitoringInput()
         {
             while (StopMonitoring)
             {
@@ -57,7 +57,6 @@ namespace CESATAutomationDevelop
             temp1 = 0;
             MonitoringInput();
         }
-        public bool StopMonitoring { get => stopMonitoring; set => stopMonitoring = value; }
         internal void WritePort(int port, int pin, int value)
         {
             errorCode = dOut.WriteBit(port,pin,(byte)value);
@@ -67,11 +66,14 @@ namespace CESATAutomationDevelop
             errorCode = dOut.Write(0, (byte)0x00);
             errorCode = dOut.Write(1, (byte)0x00);
         }
+        /*
         private void dIn_Interrupt(object sender, DiSnapEventArgs e)
         {
             StopMonitoring = false;
         }
+         */
         public byte DataPort0 { get => dataPort0; set => dataPort0 = value; }
         public byte DataPort1 { get => dataPort1; set => dataPort1 = value; }
+        public bool StopMonitoring { get => stopMonitoring; set => stopMonitoring = value; }
     }
 }

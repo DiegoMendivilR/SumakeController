@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Diagnostics;
@@ -14,8 +15,9 @@ using System.Windows.Input;
 
 namespace CESATAutomationDevelop
 {
-    public class SMTC1RS232
+    public class SerialSmtC1
     {
+        
         /*PROPERTIES*/
         private string tempBuffer;
         private SerialPort serialPort = new SerialPort();
@@ -57,6 +59,7 @@ namespace CESATAutomationDevelop
         private float lowerThreadLimit = 0;
         private float upperTorqueLimit = 0;
         private float lowerTorqueLimit = 0;
+        private string torque;
         
         #region Controller default configurations
         private TorqueUnit torqueUnit = TorqueUnit.Lbin;
@@ -74,10 +77,8 @@ namespace CESATAutomationDevelop
         /// <summary>startSignalMode options: 0:Motor (default) 1:Trigger. Only from V1.009</summary>
         private StartSignalMode startSignalMode = StartSignalMode.Trigger;
         #endregion
-        private Controller sMTC1Controller;
-        public SMTC1RS232(Controller sMTC1Controller)
+        public SerialSmtC1()
         {
-            this.sMTC1Controller = sMTC1Controller;
             serialPort.DataReceived += new SerialDataReceivedEventHandler(Port_Listener);
         }
         /*METHODS*/
@@ -110,6 +111,7 @@ namespace CESATAutomationDevelop
                     case "ANS108": this.ANS108(parameters); break;
                     default: break;
                 }
+
             }
         }
         public void OpenPort(string portName)
@@ -130,13 +132,7 @@ namespace CESATAutomationDevelop
                 serialPort.Parity = (Parity)Enum.Parse(typeof(Parity), "None");
                 // Retrive the COM options later #TODO
                 serialPort.PortName = portName;
-                try
-                {
-                    serialPort.Open();
-                }
-                catch (UnauthorizedAccessException e) { sMTC1Controller.ShowMessage(e.Message, "UnauthorizedAccessException"); }
-                catch (IOException e) { sMTC1Controller.ShowMessage(e.Message, "IOException"); }
-                catch (ArgumentException e) { sMTC1Controller.ShowMessage(e.Message, "ArgumentException"); }
+                serialPort.Open();
             }
         }
         public void ClosePort()
@@ -148,10 +144,6 @@ namespace CESATAutomationDevelop
             if(serialPort.IsOpen)
             {
                 serialPort.Write(data);
-            }
-            else
-            {
-                sMTC1Controller.OpenPortFirst();
             }
         }
         private void REQ100(string[] parameters)
@@ -173,7 +165,6 @@ namespace CESATAutomationDevelop
             var right = Regex.Match(parameters[25], @"/.*", RegexOptions.None);
             //TotalScrews = Int32.Parse(left.Value.Substring(0, left.Value.Length - 1));
             //RemainingScrews = Int32.Parse(left.Value.Substring(1));
-            sMTC1Controller.UpdateUi();
             //Write(CMD100());
         }
         public void CMD100()
@@ -273,7 +264,6 @@ namespace CESATAutomationDevelop
             LedMode = (LedMode)Int32.Parse(parameters[26]);
             StartMode = (StartMode)Int32.Parse(parameters[27]);
             InstructionNumber = Int32.Parse(parameters[28]);
-            sMTC1Controller.UpdateSettings();
         }
         /*
         public string REQ100Out(string DeviceID, string Job, string JobSequence, string TighteningProgram, string RemainingScrews, string TotalScrews)
@@ -282,8 +272,9 @@ namespace CESATAutomationDevelop
             return "{" + string.Format("REQ{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14},{15},{16},{17},{18},{19},{20},{21},{22},{23},{24},{25},{26},", "104", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, Unused, Unused, DeviceID, ScrewdriverIDCode, ControllerIDCode, Mode, Unused, Job, JobSequence, SelectScrewDriver, TighteningProgram, DeviceType, ScrewdriverStatus, ControllerVersion, ScrewdriverVersion, Nsasstatus, string.Format("{0}/{1}", RemainingScrews, TotalScrews), InstructionNumber) + "}";
         }
          */
-        private async void DATA100(string[] parameters)
+        private /*async*/ void DATA100(string[] parameters)
         {
+            /*
             var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], sMTC1Controller.getIDSerie());
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -291,11 +282,13 @@ namespace CESATAutomationDevelop
                 SqlCommand command = new SqlCommand(query, connection);
                 await command.ExecuteNonQueryAsync();
             }
+             */
         }
         private void DATA101(string[] parameters)
         {
             TemporalListen = "";
-            sMTC1Controller.updateTorque(parameters[1]);
+            torque = parameters[1];
+            //sMTC1Controller.updateTorque(parameters[1]);
         }
         private void ANS104(string[] parameters)
         {
@@ -315,7 +308,7 @@ namespace CESATAutomationDevelop
                 str12	1~255	Instruction number
                 str13	0~1	Command setting status: 1: correct; 0: error
              */
-            sMTC1Controller.JobChanged(Int32.Parse(parameters[12]) == 1);
+            //sMTC1Controller.JobChanged(Int32.Parse(parameters[12]) == 1);
         }
         /*GET AND SET*/
         public bool IsOpen { get => serialPort.IsOpen; }
@@ -364,5 +357,6 @@ namespace CESATAutomationDevelop
         public float LowerThreadLimit { get => lowerThreadLimit; set => lowerThreadLimit = value; }
         public float UpperTorqueLimit { get => upperTorqueLimit; set => upperTorqueLimit = value; }
         public float LowerTorqueLimit { get => lowerTorqueLimit; set => lowerTorqueLimit = value; }
+        public string Torque { get => torque; set => torque = value; }
     }
 }

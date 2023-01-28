@@ -12,8 +12,8 @@ namespace CESATAutomationDevelop.Screens
 {
     public partial class Settings : Form
     {
-        SMTC1RS232 serialPort;
-        public Settings(SMTC1RS232 serialPort)
+        SerialSmtC1 serialPort;
+        public Settings(SerialSmtC1 serialPort)
         {
             this.serialPort = serialPort;
             InitializeComponent();

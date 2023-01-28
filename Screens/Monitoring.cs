@@ -13,8 +13,8 @@ namespace CESATAutomationDevelop.Screens
 {
     public partial class Monitoring : Form
     {
-        SMTC1RS232 sumakeSerial = null;
-        public Monitoring(SMTC1RS232 sumakeSerial)
+        SerialSmtC1 sumakeSerial = null;
+        public Monitoring(SerialSmtC1 sumakeSerial)
         {
             this.sumakeSerial = sumakeSerial;
             InitializeComponent();

@@ -66,13 +66,20 @@ namespace CESATAutomationDevelop
     enum ScrewdriverStatus { DisableBoth, EnableFWD, EnableREV, EnableBoth }
     enum TargetCondition { NA, Thread, Torque }
     enum Direction { CW, CCW }
+    enum OkAllStop { Off, On }
+    enum Select { NA, TS, TP, Job }
+    enum ControllerState { NoCondition, ScrewCountClear, EnableScrewdriver, DisableScrewdriver, ResetController, ResetJobSequence }
+    enum ScrewdriverMode { NoCondition, NSASConfirmToEnable }
+    enum InterfaceType { USB, RS232, RS485 }
     public partial class Controller : Form
     {
-        private SMTC1RS232 serialPort;
+        private SerialSmtC1 serialPort;
         private Serie serie = new Serie();
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private Form activeForm;
         private System.Windows.Forms.Button selectedButtonScreen;
+        RS232 rs232;
+        UsbDaq daq;
 
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -88,11 +95,16 @@ namespace CESATAutomationDevelop
         public Controller()
         {
             InitializeComponent();
+            rs232 = new RS232("COM3");
+            rs232.DataReceived += OnDataReceived;
+            daq= new UsbDaq("USB-5862,BID#1");
+            daq.Port0Update = OnPort0Update;
+            daq.StartMonitoring();
+
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-            serialPort = new SMTC1RS232(this);
-            //usb5862 = new USB5862("USB-5862,BID#1");
+            serialPort = new SerialSmtC1();
             //STYLES
             ThemeColor();
             /*
@@ -100,6 +112,10 @@ namespace CESATAutomationDevelop
             eaaSerial.showmethemagic();
              */
         }
+
+        private void OnPort0Update(object sender, EventArgs e) => Console.WriteLine(String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0));
+
+        private void OnDataReceived(object sender, EventArgs e) => Console.WriteLine(String.Format("OnDataReceived: {0}", (e as RS232EventArgs).value));
 
         #region FORM THEME
         private void ThemeColor()
