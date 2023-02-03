@@ -32,6 +32,7 @@ using System.Media;
 
 namespace CESATAutomationDevelop
 {
+    #region ENUMS
     enum DeviceName { AMS, DAS }
     enum BatchMode { Decrease, Increase }
     enum BarcodeEnable { On, Off }
@@ -71,8 +72,10 @@ namespace CESATAutomationDevelop
     enum ControllerState { NoCondition, ScrewCountClear, EnableScrewdriver, DisableScrewdriver, ResetController, ResetJobSequence }
     enum ScrewdriverMode { NoCondition, NSASConfirmToEnable }
     enum InterfaceType { USB, RS232, RS485 }
+    #endregion
     public partial class Controller : Form
     {
+        #region PROPERTIES
         private SerialSmtC1 serialPort;
         private Serie serie = new Serie();
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
@@ -83,6 +86,7 @@ namespace CESATAutomationDevelop
         public SmtC1 smtC1;
         public CobotSimulated cobot;
         public string tempBuffer = "";
+        #endregion
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -111,7 +115,9 @@ namespace CESATAutomationDevelop
 
 
             //this.panelContent.Controls.Add(new Simulation());
-            Simulation();
+            Task.Delay(5000).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
+                Simulation();
+            });
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -137,9 +143,6 @@ namespace CESATAutomationDevelop
 
             int tr = 0;
             do
-            {
-
-            } while (true);
             {
                 Console.WriteLine("Cobot moving");
                 daq.WriteBit(1, 0, 1);
