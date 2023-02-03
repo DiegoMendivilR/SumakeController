@@ -18,30 +18,6 @@ namespace CESATAutomationDevelop
     public class EAACTDSRS232
     {
         //EAACTDS PROPS
-        private enum CMD
-        {
-            [Description("REQUEST CURRENT STATUS")] CMD0,
-            [Description("COMMAND PROGRAM PARAMETER SETTINGS")] CMD2,
-            [Description("COMMAND CONTROLLER PARAMETER SETTINGS")] CMD3,
-            [Description("COMMAND SCREW COUNT TO ZERO")] CMD4,
-            [Description("COMMAND CONFIRM (ENABLE NG STOP/OKALL STOP)")] CMD5,
-            [Description("COMMAND SELECT SCREWDRIVER & PROGRAM")] CMD6,
-            [Description("READ CONTROLLER PROGRAM STATUS")] CMD7,
-            [Description("READ CONTROLLER PARAMETER")] CMD8,
-            [Description("COMMAND STD MODE ALL SEQUENCE")] CMD10,
-            [Description("READ STD MODE CURRENT SEQUENCE")] CMD11,
-            [Description("READ SCREWDRIVER STATUS")] CMD16,
-            [Description("ENABLE/DISABLE")] CMD51,
-            [Description("RESET CONTROLLER")] CMD52,
-            [Description("SETTING CONTROLLER PASSWORD")] CMD53,
-            [Description("READ CONTROLLER PASSWORD")] CMD54,
-            [Description("BARCODE")] CMD55,
-            [Description("READ SCANNER PARAMETER SETTING")] CMD56,
-            [Description("COMMAND FILTER SETTING")] CMD57,
-            [Description("READ FILTER PARAMTER")] CMD58,
-            [Description("COMMAND THREAD FINDING STATUS")] CMD59,
-            [Description("READ THREAD FINDING STATUS")] CMD60,
-        }
         private enum ReverseMode { EACH, ONCE }
         private enum BatchMode { [Description("Decrease")] DEC, [Description("Increase")] INC }
         private enum BrakeSignal { Release, Keep }
@@ -94,8 +70,8 @@ namespace CESATAutomationDevelop
 
         public void showmethemagic()
         {
-            Console.WriteLine(CMD.CMD0);
-            Console.WriteLine(CMD.CMD0.ToString());
+            //Console.WriteLine(CMD.CMD0);
+            //Console.WriteLine(CMD.CMD0.ToString());
         }
         
         /*PROPERTIES*/

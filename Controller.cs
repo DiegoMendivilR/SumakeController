@@ -78,8 +78,10 @@ namespace CESATAutomationDevelop
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private Form activeForm;
         private System.Windows.Forms.Button selectedButtonScreen;
-        RS232 rs232;
-        UsbDaq daq;
+        public RS232 rs232;
+        public UsbDaq usbDaq;
+        public SmtC1 smtC1;
+        public string tempBuffer = "";
 
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -95,11 +97,11 @@ namespace CESATAutomationDevelop
         public Controller()
         {
             InitializeComponent();
+            smtC1 = new SmtC1();
             rs232 = new RS232("COM3");
-            rs232.DataReceived += OnDataReceived;
-            daq= new UsbDaq("USB-5862,BID#1");
-            daq.Port0Update = OnPort0Update;
-            daq.StartMonitoring();
+            rs232.RS232DataReceived += OnDataReceived;
+            usbDaq = new UsbDaq("USB-5862,BID#1") { Port0Update = OnPort0Update };
+            usbDaq.StartMonitoring();
 
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
@@ -112,10 +114,18 @@ namespace CESATAutomationDevelop
             eaaSerial.showmethemagic();
              */
         }
-
         private void OnPort0Update(object sender, EventArgs e) => Console.WriteLine(String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0));
-
-        private void OnDataReceived(object sender, EventArgs e) => Console.WriteLine(String.Format("OnDataReceived: {0}", (e as RS232EventArgs).value));
+        //private void OnDataReceived(object sender, EventArgs e) => Console.WriteLine(String.Format("OnDataReceived: {0}", (e as RS232EventArgs).value));
+        private void OnDataReceived(object sender, EventArgs e)
+        {
+            string data = (e as RS232EventArgs).value;
+            if (rs232.IsOpen && ValidateCommand(data))
+                tempBuffer = smtC1.Listener(CommandParameters(data));
+            else
+                tempBuffer += data;
+        }
+        private bool ValidateCommand(string data) => Regex.Match(data, @"{.*}", RegexOptions.None).Success; // If pattern not match, wait for the line ending pattern to proccess
+        private string CommandParameters(string data) => Regex.Match(data, @"(?:[^{}]+)", RegexOptions.None).Value;
 
         #region FORM THEME
         private void ThemeColor()

@@ -134,7 +134,7 @@ namespace CESATAutomationDevelop
         public string CMD103()
         {
             Time time = new Time();
-            string command = String.Format("CMD103" + stringCommandHelper(24), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, deviceID, (int)TorqueUnit, (int)GateMode, (int)Mode, (int)OkAllSignal, (int)BatchMode, (int)InternetSettings, (int)BuzzerMode, (int)Language, (int)Unused, (int)LedMode, (int)StartMode, (int)BarcodeEnable, (int)StartSignalMode, InstructionNumber);
+            string command = String.Format("CMD103" + StringCommandHelper(24), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, deviceID, (int)TorqueUnit, (int)GateMode, (int)Mode, (int)OkAllSignal, (int)BatchMode, (int)InternetSettings, (int)BuzzerMode, (int)Language, (int)Unused, (int)LedMode, (int)StartMode, (int)BarcodeEnable, (int)StartSignalMode, InstructionNumber);
             Console.WriteLine(command);
             return "{" + command + "}";
         }
@@ -151,13 +151,13 @@ namespace CESATAutomationDevelop
         public string CMD108()
         {
             Time time = new Time();
-            string command = String.Format("CMD108" + stringCommandHelper(10), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, 1, InstructionNumber);
+            string command = String.Format("CMD108" + StringCommandHelper(10), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, 1, InstructionNumber);
             return "{" + command + "}";
         }
         public string CMD116()
         {
             Time t = new Time();
-            string command = String.Format(stringCommandHelper(11),CMD.CMD116,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,InstructionNumber);
+            string command = String.Format(StringCommandHelper(11),CMD.CMD116,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,InstructionNumber);
             return "{" + command + "}";
         }
         public string CMD121()
@@ -177,31 +177,38 @@ namespace CESATAutomationDevelop
             DelayTime = (float)0.2;
              */
             Time time = new Time();
-            string command = String.Format("CMD121" + stringCommandHelper(28), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, TighteningStep, StepName, Speed, (int)TargetCondition, (int)Unused, TargetThread, TargetTorque, (int)Direction, DelayTime, UpperThreadLimit, LowerThreadLimit, UpperTorqueLimit, LowerTorqueLimit, (int)Unused, (int)Unused, (int)Unused, (int)Unused, (int)Unused, InstructionNumber);
+            string command = String.Format("CMD121" + StringCommandHelper(28), time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, TighteningStep, StepName, Speed, (int)TargetCondition, (int)Unused, TargetThread, TargetTorque, (int)Direction, DelayTime, UpperThreadLimit, LowerThreadLimit, UpperTorqueLimit, LowerTorqueLimit, (int)Unused, (int)Unused, (int)Unused, (int)Unused, (int)Unused, InstructionNumber);
             return "{" + command + "}";
         }
         public string CMD122()
         {
             Time t = new Time();
-            string command = String.Format(stringCommandHelper(26),CMD.CMD122,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,TighteningProgram,StepName,Unused,FirstStep,SecondStep,ThirdStep,FifthStep,OkAllAlarmTime,OkAlarmTime,(int)OkAllStop,NsNgStop,Unused,Unused,Unused,InstructionNumber);
+            string command = String.Format(StringCommandHelper(26),CMD.CMD122,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,TighteningProgram,StepName,Unused,FirstStep,SecondStep,ThirdStep,FifthStep,OkAllAlarmTime,OkAlarmTime,(int)OkAllStop,NsNgStop,Unused,Unused,Unused,InstructionNumber);
             return "{" + command + "}";
         }
         public string CMD123()
         {
             Time t = new Time();
-            string command = String.Format(stringCommandHelper(18),CMD.CMD123,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,Job,0,String.Join(",",TigtheningProgram), String.Join(",", TighteningRepeat),(int)Direction,SettingButtonTorque,Speed,InstructionNumber);
+            string command = String.Format(StringCommandHelper(18),CMD.CMD123,t.Year,t.Month,t.Day,t.Hour,t.Minute,t.Second,t.CheckSum,t.KeyCode,DeviceName,Job,0,String.Join(",",TigtheningProgram), String.Join(",", TighteningRepeat),(int)Direction,SettingButtonTorque,Speed,InstructionNumber);
             return "{" + command + "}";
         }
         public string CMD124()
         {
             Time t = new Time();
-            string command = String.Format(stringCommandHelper(13), CMD.CMD124, t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, t.CheckSum, t.KeyCode, DeviceName, Select, TsTpJob, InstructionNumber);
+            string command = String.Format(StringCommandHelper(13), CMD.CMD124, t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, t.CheckSum, t.KeyCode, DeviceName, Select, TsTpJob, InstructionNumber);
+            return "{" + command + "}";
+        }
+        public string CMD126()
+        {
+            int determineInitialPointSection = 1, determineSectionSize = 1;
+            Time t = new Time();
+            string command = String.Format(StringCommandHelper(13), CMD.CMD126, t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, t.CheckSum, t.KeyCode, DeviceName, Job, determineInitialPointSection, determineSectionSize, barcodeEnable, instructionNumber);
             return "{" + command + "}";
         }
         public string CMD151()
         {
             Time t = new Time();
-            string command = String.Format(stringCommandHelper(14), CMD.CMD124, t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, t.CheckSum, t.KeyCode, DeviceName, (int)ControllerState, (int)ScrewdriverMode, Unused, InstructionNumber, TsTpJob, InstructionNumber);
+            string command = String.Format(StringCommandHelper(14), CMD.CMD151, t.Year, t.Month, t.Day, t.Hour, t.Minute, t.Second, t.CheckSum, t.KeyCode, DeviceName, (int)ControllerState, (int)ScrewdriverMode, Unused, InstructionNumber);
             return "{" + command + "}";
         }
         #endregion
@@ -262,7 +269,12 @@ namespace CESATAutomationDevelop
         }
         #endregion
 
-        private string stringCommandHelper(int no)
+        public string Listener(string commandString)
+        {
+            Console.WriteLine("Listener:"+commandString);
+            return String.Empty;
+        }
+        private string StringCommandHelper(int no)
         {
             string s = ",";
             for (int x = 0; x < no; x++)

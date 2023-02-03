@@ -16,6 +16,7 @@ namespace CESATAutomationDevelop
         private int second;
         private int checkSum;
         private int keyCode;
+        private int chkCode;
         public Time()
         {
             this.year = DateTime.Now.Year;
@@ -26,6 +27,7 @@ namespace CESATAutomationDevelop
             this.second = DateTime.Now.Second;
             this.checkSum = this.year + this.month + this.day + this.hour + this.minute + this.second;
             this.keyCode = checkSum + 5438;
+            this.ChkCode = checkSum + 5438;
         }
         public string Year { get { return year.ToString(); } }
         public string Month { get { return month.ToString("D2"); } }
@@ -35,5 +37,7 @@ namespace CESATAutomationDevelop
         public string Second { get { return second.ToString("D2"); } }
         public string CheckSum { get { return checkSum.ToString(); } }
         public string KeyCode { get { return keyCode.ToString(); } }
+
+        public int ChkCode { get => chkCode; set => chkCode = value; }
     }
 }
