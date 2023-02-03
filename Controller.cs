@@ -108,11 +108,14 @@ namespace CESATAutomationDevelop
             Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
                 serial.Write(smtC1.CMD100());
             });
+
+
+            //this.panelContent.Controls.Add(new Simulation());
             Simulation();
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-            serialPort = new SerialSmtC1();
+            //serialPort = new SerialSmtC1();
             //STYLES
             ThemeColor();
             /*
@@ -122,12 +125,46 @@ namespace CESATAutomationDevelop
         }
         public async void Simulation()
         {
-            Console.WriteLine("Simulation Start");
-            while(daq.DataPort0 != 0x5)
+            int writeDelay = 150; //relay is 150ms delay
+            int screwingDelay = 1000; //wait time between screws is 1 second delay
+            int scannDelay = 50;
+
+            //resetear interfaz
+            Console.WriteLine("daq: Reset");
+            daq.ResetOutput();
+            //Simulation
+            Console.WriteLine("Start");
+
+            int tr = 0;
+            do
             {
-                await cobot.MoveArm();
-            }
-            Console.WriteLine("Simulation End");
+
+            } while (true);
+            {
+                Console.WriteLine("Cobot moving");
+                daq.WriteBit(1, 0, 1);
+                await Task.Delay(writeDelay);
+                while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay);
+                daq.WriteBit(1, 0, 0);
+
+
+                Console.WriteLine("Screwing ");
+                daq.WriteBit(0, 0, 1);
+                await Task.Delay(writeDelay);
+
+                Console.WriteLine("Scanning");
+                while(daq.DataPort0==0x0) await Task.Delay(scannDelay);
+                Console.WriteLine("Screwing Stop");
+                daq.WriteBit(0, 0, 0);
+
+                await Task.Delay(screwingDelay);
+                tr++;
+            }while (daq.ReadBit(0,2) == 0);
+            
+            Console.WriteLine("End");
+            //resetear interfaz
+            Console.WriteLine("daq: Reset");
+            daq.ResetOutput();
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -300,7 +337,7 @@ namespace CESATAutomationDevelop
         /// <param name="e"></param>
         private void SMTC1Controller_FormClosing(object sender, FormClosingEventArgs e)
         {
-            serialPort.ClosePort();
+            serialPort?.ClosePort();
         }
 
         /// <summary>

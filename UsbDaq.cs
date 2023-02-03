@@ -3,6 +3,7 @@ using CESATAutomationDevelop.Screens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -58,9 +59,15 @@ namespace CESATAutomationDevelop
             temp1 = 0;
             MonitoringInput();
         }
-        internal void WritePort(int port, int pin, int value)
+        public void WriteBit(int port, int pin, int value)
         {
             errorCode = dOut.WriteBit(port,pin,(byte)value);
+        }
+        public byte ReadBit(int port, int bit)
+        {
+            //byte data;
+            dIn.ReadBit(port, bit,out byte data);
+            return data;
         }
         public void ResetOutput()
         {

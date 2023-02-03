@@ -142,7 +142,7 @@ namespace CESATAutomationDevelop
         {
             Time time = new Time();
             string command = String.Format("CMD{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},", "100", time.Year, time.Month, time.Day, time.Hour, time.Minute, time.Second, time.CheckSum, time.KeyCode, DeviceName, InstructionNumber);
-            Console.WriteLine("{" + command + "}");
+            //Console.WriteLine("{" + command + "}");
             return "{" + command + "}";
         }
         public string CMD103()
@@ -281,7 +281,7 @@ namespace CESATAutomationDevelop
         #endregion
         public string Listener(string commandString)
         {
-            //Console.WriteLine("Listener:"+commandString);
+            Console.WriteLine("Listener:"+commandString);
             string[] parameters = commandString.Split(',');
             switch(parameters[0])
             {

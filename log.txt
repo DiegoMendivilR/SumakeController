@@ -1,0 +1,50 @@
+﻿daq: Reset
+Start
+
+Cobot moving
+Screwing 
+Scanning
+Listener:DATA101,00.033,000.00
+Listener: DATA101,00.072,000.00
+Listener:DATA101,01.627,000.82
+Listener: DATA101,00.000,000.00
+OnPort0Update: 1
+Screwing Stop
+Listener:DATA100,2023,02,03,14,30,22,2094,7532,4,001,SMT0121070001A______,2106001A____________,0000000001,01,01,01,******,01,0000.8200,2,0001.6270,0005.0,02 / 04,0,OK___,0,
+
+Cobot moving
+Screwing 
+Listener:DATA101,00.015,000.00
+Listener: DATA101,00.051,000.00
+Listener: DATA101,00.090,000.00
+Scanning
+Listener:DATA101,01.575,000.00
+Listener: DATA101,00.000,000.00
+OnPort0Update: 1
+Screwing Stop
+Listener:DATA100,2023,02,03,14,30,28,2100,7538,4,001,SMT0121070001A______,2106001A____________,0000000002,01,01,01,******,01,0000.7700,2,0001.6270,0005.0,03 / 04,0,OK___,0,
+
+Cobot moving
+Screwing 
+Listener: DATA101,00.012,000.00
+Scanning
+Listener:DATA101,01.556,000.00
+Listener: DATA101,01.584,000.82
+Listener: .00
+OnPort0Update: 1
+Screwing Stop
+Listener:DATA100,2023,02,03,14,30,33,2105,7543,4,001,SMT0121070001A______,2106001A____________,0000000003,01,01,01,******,01,0000.8200,2,0001.5840,0005.0,04 / 04,0,OK___,0,
+
+Cobot moving
+Screwing 
+Listener:DATA101,00.017,000.00
+Listener: DATA101,00.057,000.00
+Scanning
+Listener:DATA101,01.601,000.00
+Listener: DATA101,00.000,000.00
+OnPort0Update: 5
+Screwing Stop
+End
+daq: Reset
+Listener:DATA100,2023,02,03,14,30,38,2110,7548,4,001,SMT0121070001A______,2106001A____________,0000000004,01,01,01,******,01,0000.8000,2,0001.6240,0005.0,00 / 04,0,OKALL,0,
+Listener: DATA100,2023,02,03,14,30,38,2110,7548,4,001,SMT0121070001A______,2106001A____________,0000000004,01,01,01,******,01,0000.8000,2,0001.6240,0005.0,00 / 04,0,OKALL,0,

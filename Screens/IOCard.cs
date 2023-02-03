@@ -75,7 +75,7 @@ namespace CESATAutomationDevelop.Screens
                 else
                     color = Theme.ContrastGray;
                 ((System.Windows.Forms.Button)(sender)).BackColor = color;
-                daq.WritePort(port, pin, color == Theme.ContrastGray ? 0 : 1);
+                daq.WriteBit(port, pin, color == Theme.ContrastGray ? 0 : 1);
             }
         }
         private void buttonStartMonitoring_Click(object sender, EventArgs e) => daq.StartMonitoring();
