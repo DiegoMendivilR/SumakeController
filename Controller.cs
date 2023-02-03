@@ -82,7 +82,6 @@ namespace CESATAutomationDevelop
         public UsbDaq usbDaq;
         public SmtC1 smtC1;
         public string tempBuffer = "";
-
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
         public const int HT_CAPTION = 0x2;
@@ -93,15 +92,20 @@ namespace CESATAutomationDevelop
         private const int cGrip = 16;
         private const int cCaption = 32;
         #endregion
-
         public Controller()
         {
             InitializeComponent();
             smtC1 = new SmtC1();
             rs232 = new RS232("COM3");
-            rs232.RS232DataReceived += OnDataReceived;
-            usbDaq = new UsbDaq("USB-5862,BID#1") { Port0Update = OnPort0Update };
-            usbDaq.StartMonitoring();
+            usbDaq = new UsbDaq("USB-5862,BID#1");
+
+            smtC1.PropertyChanged += SmtC1_PropertyChanged;
+            rs232.RS232DataReceived += RS232_OnDataReceived;
+            usbDaq.Port0Update = Daq_Port0Changed;
+
+            Task.Delay(1000).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
+                rs232.Write(smtC1.CMD100());
+            });
 
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
@@ -114,9 +118,20 @@ namespace CESATAutomationDevelop
             eaaSerial.showmethemagic();
              */
         }
-        private void OnPort0Update(object sender, EventArgs e) => Console.WriteLine(String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0));
-        //private void OnDataReceived(object sender, EventArgs e) => Console.WriteLine(String.Format("OnDataReceived: {0}", (e as RS232EventArgs).value));
-        private void OnDataReceived(object sender, EventArgs e)
+        private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            switch(e.PropertyName)
+            {
+                case "Job":  Console.WriteLine("Job:"+(sender as SmtC1).Job);
+                    break;
+                case "TighteningProgram":  Console.WriteLine("TighteningProgram:" + (sender as SmtC1).TighteningProgram);
+                    break;
+                default:
+                    break;
+            }
+        }
+        private void Daq_Port0Changed(object sender, EventArgs e) => Console.WriteLine(String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0));
+        private void RS232_OnDataReceived(object sender, EventArgs e)
         {
             string data = (e as RS232EventArgs).value;
             if (rs232.IsOpen && ValidateCommand(data))
@@ -126,7 +141,6 @@ namespace CESATAutomationDevelop
         }
         private bool ValidateCommand(string data) => Regex.Match(data, @"{.*}", RegexOptions.None).Success; // If pattern not match, wait for the line ending pattern to proccess
         private string CommandParameters(string data) => Regex.Match(data, @"(?:[^{}]+)", RegexOptions.None).Value;
-
         #region FORM THEME
         private void ThemeColor()
         {
@@ -158,7 +172,6 @@ namespace CESATAutomationDevelop
             }
         }
         #endregion
-
         #region WINDOW BORDERLESS MOVE AND RESIZE METHOD
         protected override void WndProc(ref Message m)
         {
@@ -180,7 +193,6 @@ namespace CESATAutomationDevelop
             base.WndProc(ref m);
         }
         #endregion
-
         #region CONTROLLER METHODS
         private void SetButtonColors(System.Windows.Forms.Button sender)
         {
@@ -255,7 +267,6 @@ namespace CESATAutomationDevelop
             childForm.Show();
         }
         #endregion
-
         #region METHODS FOR CONTROL EVENTS
 
         /// <summary>

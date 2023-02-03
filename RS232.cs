@@ -12,7 +12,6 @@ namespace CESATAutomationDevelop
         #region PROPERTIES
         public event EventHandler RS232DataReceived;
         #endregion
-
         #region CONSTRUCTORS
         public RS232(string portName)
         {
@@ -35,7 +34,6 @@ namespace CESATAutomationDevelop
             bool connected = Connect();
         }
         #endregion
-
         #region METHODS
         public bool Connect()
         {
@@ -48,21 +46,6 @@ namespace CESATAutomationDevelop
         {
             if (IsOpen) OnDataReceived(new RS232EventArgs(ReadExisting()));
         }
-        /* ALTERNATIVE IMPLEMENTATION
-        if (!serial.IsOpen) return; // If the com port has been closed, do nothing
-        tempBuffer += serial.ReadExisting(); // Read all the data waiting in the buffer
-        Console.WriteLine("tempBuffer:"+tempBuffer);
-        var regex = @"{.*}";
-        var complete = Regex.Match(tempBuffer, regex, RegexOptions.None);
-        if (complete.Success) // If pattern not match, tempBuffer concats untill line ending pattern is received
-        {
-            var data = Regex.Match(tempBuffer, @"(?:[^{}]+)", RegexOptions.None);
-            RS232EventArgs eArg = new RS232EventArgs();
-            eArg.value = data.Value;
-            OnDataReceived(eArg);
-            tempBuffer = "";
-        }
-         */
         protected virtual void OnDataReceived(EventArgs e) => RS232DataReceived?.Invoke(this, e);
         #endregion
     }

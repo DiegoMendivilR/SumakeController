@@ -27,6 +27,7 @@ namespace CESATAutomationDevelop
             deviceInformation = new DeviceInformation(deviceDescription);
             dIn.SelectedDevice = deviceInformation;
             dOut.SelectedDevice = deviceInformation;
+            StartMonitoring();
             //dIn.Interrupt += new EventHandler<DiSnapEventArgs>(dIn_Interrupt);
         }
         protected virtual void OnPort0Update(EventArgs e) => Port0Update?.Invoke(this, e);
