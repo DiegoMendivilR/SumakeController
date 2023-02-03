@@ -78,9 +78,10 @@ namespace CESATAutomationDevelop
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private Form activeForm;
         private System.Windows.Forms.Button selectedButtonScreen;
-        public RS232 rs232;
-        public UsbDaq usbDaq;
+        public RS232 serial;
+        public UsbDaq daq;
         public SmtC1 smtC1;
+        public CobotSimulated cobot;
         public string tempBuffer = "";
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -96,17 +97,18 @@ namespace CESATAutomationDevelop
         {
             InitializeComponent();
             smtC1 = new SmtC1();
-            rs232 = new RS232("COM3");
-            usbDaq = new UsbDaq("USB-5862,BID#1");
+            serial = new RS232("COM3");
+            daq = new UsbDaq("USB-5862,BID#1");
+            cobot = new CobotSimulated();
 
             smtC1.PropertyChanged += SmtC1_PropertyChanged;
-            rs232.RS232DataReceived += RS232_OnDataReceived;
-            usbDaq.Port0Update = Daq_Port0Changed;
+            serial.RS232DataReceived += RS232_OnDataReceived;
+            daq.Port0Update = Daq_Port0Changed;
 
-            Task.Delay(1000).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
-                rs232.Write(smtC1.CMD100());
+            Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
+                serial.Write(smtC1.CMD100());
             });
-
+            Simulation();
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -117,6 +119,15 @@ namespace CESATAutomationDevelop
             EAACTDSRS232 eaaSerial = new EAACTDSRS232(this);
             eaaSerial.showmethemagic();
              */
+        }
+        public async void Simulation()
+        {
+            Console.WriteLine("Simulation Start");
+            while(daq.DataPort0 != 0x5)
+            {
+                await cobot.MoveArm();
+            }
+            Console.WriteLine("Simulation End");
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -134,7 +145,7 @@ namespace CESATAutomationDevelop
         private void RS232_OnDataReceived(object sender, EventArgs e)
         {
             string data = (e as RS232EventArgs).value;
-            if (rs232.IsOpen && ValidateCommand(data))
+            if (serial.IsOpen && ValidateCommand(data))
                 tempBuffer = smtC1.Listener(CommandParameters(data));
             else
                 tempBuffer += data;

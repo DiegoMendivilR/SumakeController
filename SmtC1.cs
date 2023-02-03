@@ -281,7 +281,7 @@ namespace CESATAutomationDevelop
         #endregion
         public string Listener(string commandString)
         {
-            Console.WriteLine("Listener:"+commandString);
+            //Console.WriteLine("Listener:"+commandString);
             string[] parameters = commandString.Split(',');
             switch(parameters[0])
             {

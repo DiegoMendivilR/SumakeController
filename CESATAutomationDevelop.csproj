@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="bak\CommunicationCommands.cs" />
     <Compile Include="bak\JulianDay.cs" />
+    <Compile Include="CobotSimulated.cs" />
     <Compile Include="RS232.cs">
       <SubType>Component</SubType>
     </Compile>
