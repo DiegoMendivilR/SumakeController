@@ -86,6 +86,7 @@ namespace CESATAutomationDevelop
         public SmtC1 smtC1;
         public CobotSimulated cobot;
         public string tempBuffer = "";
+        private string tempCommand = "";
         #endregion
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -101,7 +102,7 @@ namespace CESATAutomationDevelop
         {
             InitializeComponent();
             smtC1 = new SmtC1();
-            serial = new RS232("COM3");
+            serial = new RS232("COM6");
             daq = new UsbDaq("USB-5862,BID#1");
             cobot = new CobotSimulated();
 
@@ -113,6 +114,14 @@ namespace CESATAutomationDevelop
                 serial.Write(smtC1.CMD100());
             });
 
+            Form childForm =new Screens.Simulation();
+            childForm.TopLevel = false;
+            childForm.FormBorderStyle = FormBorderStyle.None;
+            childForm.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(childForm);
+            panelContent.Tag = childForm;
+            childForm.BringToFront();
+            childForm.Show();
 
             //this.panelContent.Controls.Add(new Simulation());
             Task.Delay(5000).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
@@ -190,7 +199,18 @@ namespace CESATAutomationDevelop
             else
                 tempBuffer += data;
         }
-        private bool ValidateCommand(string data) => Regex.Match(data, @"{.*}", RegexOptions.None).Success; // If pattern not match, wait for the line ending pattern to proccess
+        private bool ValidateCommand(string data)
+        {
+            if(Regex.Match(data, @"{.*}", RegexOptions.None).Success && tempCommand != data) // If pattern not match, wait for the line ending pattern to proccess
+            {
+                tempCommand = data;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         private string CommandParameters(string data) => Regex.Match(data, @"(?:[^{}]+)", RegexOptions.None).Value;
         #region FORM THEME
         private void ThemeColor()
