@@ -122,6 +122,7 @@ namespace CESATAutomationDevelop
         private ScrewdriverMode screwdriverMode;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler TighteningDataReceived;
         #endregion
         #region METHODS
         // This method is called by the Set accessor of each property.
@@ -281,11 +282,13 @@ namespace CESATAutomationDevelop
         #endregion
         public string Listener(string commandString)
         {
-            Console.WriteLine("Listener:"+commandString);
+            //Console.WriteLine("Listener:"+commandString);
             string[] parameters = commandString.Split(',');
             switch(parameters[0])
             {
                 case nameof(REQ.REQ100): REQ100(parameters); break;
+                case nameof(DATA.DATA100): Console.WriteLine(nameof(DATA.DATA100)); TighteningDataReceived?.Invoke(this, new IRS232Data100EventArgs(parameters));
+                    break;
                 default: break;
             }
             return String.Empty;
@@ -354,5 +357,11 @@ namespace CESATAutomationDevelop
         private ScrewdriverMode ScrewdriverMode { get => screwdriverMode; set { if (value != screwdriverMode) { screwdriverMode = value; NotifyPropertyChanged(); } } }
         internal ControllerState ControllerState { get => controllerState; set { if (value != controllerState) { controllerState = value; NotifyPropertyChanged(); } } }
         #endregion
+    }
+    public class IRS232Data100EventArgs : EventArgs
+    {
+        private string[] parameters;
+        public IRS232Data100EventArgs(string[] parameters) => this.Parameters = parameters;
+        public string[] Parameters { get => parameters; set => parameters = value; }
     }
 }

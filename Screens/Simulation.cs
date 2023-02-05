@@ -12,9 +12,12 @@ namespace CESATAutomationDevelop.Screens
 {
     public partial class Simulation : Form
     {
+        public event EventHandler Scanning;
         public Simulation()
         {
             InitializeComponent();
+            txtInput.KeyUp += TxtInput_KeyPress;
         }
+        private void TxtInput_KeyPress(object sender, EventArgs e) => Scanning?.Invoke(sender, e);
     }
 }

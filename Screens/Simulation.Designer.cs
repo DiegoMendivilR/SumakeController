@@ -79,7 +79,6 @@
             this.txtInput.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
             this.txtInput.Location = new System.Drawing.Point(62, 3);
             this.txtInput.Name = "txtInput";
-            this.txtInput.ReadOnly = true;
             this.txtInput.Size = new System.Drawing.Size(735, 37);
             this.txtInput.TabIndex = 34;
             this.txtInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;

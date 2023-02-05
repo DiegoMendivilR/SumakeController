@@ -87,6 +87,7 @@ namespace CESATAutomationDevelop
         public CobotSimulated cobot;
         public string tempBuffer = "";
         private string tempCommand = "";
+        private int piece = 0;
         #endregion
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -106,25 +107,27 @@ namespace CESATAutomationDevelop
             daq = new UsbDaq("USB-5862,BID#1");
             cobot = new CobotSimulated();
 
-            smtC1.PropertyChanged += SmtC1_PropertyChanged;
-            serial.RS232DataReceived += RS232_OnDataReceived;
-            daq.Port0Update = Daq_Port0Changed;
+            smtC1.PropertyChanged += new PropertyChangedEventHandler(SmtC1_PropertyChanged);
+            smtC1.TighteningDataReceived += new EventHandler(SmtC1_TighteningDataReceived);
+            serial.RS232DataReceived += new EventHandler(RS232_OnDataReceived);
+            daq.Port0Update = new EventHandler(Daq_Port0Changed);
 
             Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
                 serial.Write(smtC1.CMD100());
             });
 
-            Form childForm =new Screens.Simulation();
-            childForm.TopLevel = false;
-            childForm.FormBorderStyle = FormBorderStyle.None;
-            childForm.Dock = DockStyle.Fill;
-            panelContent.Controls.Add(childForm);
-            panelContent.Tag = childForm;
-            childForm.BringToFront();
-            childForm.Show();
+            Form simulation = new Screens.Simulation();
+            simulation.TopLevel = false;
+            simulation.FormBorderStyle = FormBorderStyle.None;
+            simulation.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(simulation);
+            panelContent.Tag = simulation;
+            simulation.BringToFront();
+            simulation.Show();
+            (simulation as Screens.Simulation).Scanning += new EventHandler(Scanning);
 
             //this.panelContent.Controls.Add(new Simulation());
-            Task.Delay(5000).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
+            Task.Delay(5000).ContinueWith((task) => {
                 Simulation();
             });
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
@@ -137,6 +140,44 @@ namespace CESATAutomationDevelop
             EAACTDSRS232 eaaSerial = new EAACTDSRS232(this);
             eaaSerial.showmethemagic();
              */
+        }
+
+        private void SmtC1_TighteningDataReceived(object sender, EventArgs e)
+        {
+            Console.WriteLine("SmtC1_TighteningDataReceived");
+            Console.WriteLine(piece > 0);
+            if (piece > 0) SaveTighteningData((e as IRS232Data100EventArgs).Parameters);
+        }
+        private async void SaveTighteningData(string[] parameters)
+        {
+            var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], piece);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(query, connection);
+                //await command.ExecuteNonQueryAsync();
+                using (SqlDataReader datareader = await command.ExecuteReaderAsync())
+                    if (datareader.Read())
+                        Console.WriteLine(datareader["id"]);
+            }
+        }
+
+        private void Scanning(object sender, EventArgs e)
+        {
+            if ((e as KeyEventArgs).KeyCode == Keys.Return)
+                NewPiece((sender as System.Windows.Forms.TextBox).Text);
+        }
+        private async void NewPiece(string piece)
+        {
+            var query = String.Format("INSERT INTO CESAT.dbo.Series OUTPUT Inserted.Id VALUES ('{0}',GETDATE(),1)", piece);
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                await connection.OpenAsync();
+                SqlCommand command = new SqlCommand(query, connection);
+                using (SqlDataReader datareader = await command.ExecuteReaderAsync())
+                    if (datareader.Read())
+                        this.piece = (int)datareader["id"];
+            }
         }
         public async void Simulation()
         {
@@ -177,6 +218,7 @@ namespace CESATAutomationDevelop
             //resetear interfaz
             Console.WriteLine("daq: Reset");
             daq.ResetOutput();
+            piece = 0;
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -541,3 +583,32 @@ namespace CESATAutomationDevelop
         #endregion
     }
 }
+/* GET DATABASE RESPONSE EXAMPLE
+private async void NewPiece(string piece)
+{
+    //var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], sMTC1Controller.getIDSerie());
+    var query = String.Format("INSERT INTO CESAT.dbo.Series OUTPUT Inserted.Id VALUES ('{0}',GETDATE(),1)", piece);
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        await connection.OpenAsync();
+        SqlCommand command = new SqlCommand(query, connection);
+        //await command.ExecuteNonQueryAsync();
+        using (SqlDataReader datareader = await command.ExecuteReaderAsync())
+            if (datareader.Read())
+                Console.WriteLine(datareader["id"]);
+
+    }
+}
+ */
+/* INSERT DATABASE EXAMPLE
+private async void NewPiece(string piece)
+{
+    var query = String.Format("INSERT INTO CESAT.dbo.Series OUTPUT Inserted.Id VALUES ('{0}',GETDATE(),1)", piece);
+    using (SqlConnection connection = new SqlConnection(connectionString))
+    {
+        await connection.OpenAsync();
+        SqlCommand command = new SqlCommand(query, connection);
+        await command.ExecuteNonQueryAsync();
+    }
+}
+ */
