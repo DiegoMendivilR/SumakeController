@@ -125,8 +125,9 @@ namespace CESATAutomationDevelop
             panelContent.Tag = simulation;
             simulation.BringToFront();
             simulation.Show();
-            (simulation as Screens.Simulation).Scanning += new EventHandler(Scanning);
-            (simulation as Screens.Simulation).StartSimulation += new EventHandler(StartSimulation);
+            (simulation as Screens.Simulation).Scanning += new EventHandler(Simulation_Scan);
+            (simulation as Screens.Simulation).StartSimulation += new EventHandler(Simulation_Start);
+            (simulation as Screens.Simulation).PropertyChanged += new PropertyChangedEventHandler(Simulation_PropertyChanged);
 
             //this.panelContent.Controls.Add(new Simulation());
             /*
@@ -145,8 +146,12 @@ namespace CESATAutomationDevelop
             eaaSerial.showmethemagic();
              */
         }
+        private void Simulation_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            Console.WriteLine(""+(sender as Screens.Simulation).SimulationRunning);
+        }
 
-        private void StartSimulation(object sender, EventArgs e) => Simulation(sender, e);
+        private void Simulation_Start(object sender, EventArgs e) => Simulation(sender, e);
 
         private void SmtC1_TighteningDataReceived(object sender, EventArgs e)
         {
@@ -169,7 +174,7 @@ namespace CESATAutomationDevelop
             tightenSaved = true;
         }
 
-        private void Scanning(object sender, EventArgs e)
+        private void Simulation_Scan(object sender, EventArgs e)
         {
             if ((e as KeyEventArgs).KeyCode == Keys.Return)
                 NewPiece((sender as System.Windows.Forms.TextBox).Text);
@@ -188,6 +193,7 @@ namespace CESATAutomationDevelop
         }
         public async void Simulation(object sender, EventArgs e)
         {
+            Screens.Simulation senderForm = ((sender as Control).FindForm() as Screens.Simulation);
             if (piece == 0)
             {
                 ShowMessage("Escanee una serie primero.", "Sin serie.");
@@ -196,7 +202,7 @@ namespace CESATAutomationDevelop
                 int writeDelay = 150; //relay is 150ms delay
                 int screwingDelay = 1000; //wait time between screws is 1 second delay
                 int scannDelay = 100;
-
+                List<Image> images = new List<Image>() { Properties.Resources.cover_scw1, Properties.Resources.cover_scw2, Properties.Resources.cover_scw3, Properties.Resources.cover_scw4, Properties.Resources.cover };
                 //resetear interfaz
                 Console.WriteLine("IO Reset");
                 daq.ResetOutput();
@@ -206,6 +212,8 @@ namespace CESATAutomationDevelop
                 int tr = 0;
                 do
                 {
+                    senderForm.SimulationImage(images[tr]);
+
                     Console.WriteLine("Cobot moving");
                     daq.WriteBit(1, 0, 1);//set robot moving
                     await Task.Delay(writeDelay);
@@ -233,6 +241,8 @@ namespace CESATAutomationDevelop
                     tr++;
                 }while (daq.ReadBit(0,2) == 0);
 
+                senderForm.SimulationImage(images[tr++]);
+
                 Console.WriteLine("Cobot returning");
                 daq.WriteBit(1, 0, 1);//set robot moving
                 await Task.Delay(writeDelay);
@@ -248,10 +258,9 @@ namespace CESATAutomationDevelop
                 Console.WriteLine("IO Reset");
                 daq.ResetOutput();
                 piece = 0;
-                Control[] controls = ((sender as Control).FindForm() as Screens.Simulation).Controls.Find("txtInput", true);
+                Control[] controls = senderForm.Controls.Find("txtInput", true);
                 (controls[0] as System.Windows.Forms.TextBox).Text = String.Empty;
             }
-
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {

@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.monitoringPanel = new System.Windows.Forms.Panel();
-            this.buttonSave = new System.Windows.Forms.Button();
             this.panelInfo = new System.Windows.Forms.TableLayoutPanel();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -40,14 +39,19 @@
             this.panelScan = new System.Windows.Forms.TableLayoutPanel();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.panelImage = new System.Windows.Forms.Panel();
+            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            this.buttonSave = new System.Windows.Forms.Button();
             this.monitoringPanel.SuspendLayout();
             this.panelInfo.SuspendLayout();
             this.panelScan.SuspendLayout();
+            this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // monitoringPanel
             // 
-            this.monitoringPanel.Controls.Add(this.buttonSave);
+            this.monitoringPanel.Controls.Add(this.panelImage);
+            this.monitoringPanel.Controls.Add(this.flowLayoutPanel1);
             this.monitoringPanel.Controls.Add(this.panelInfo);
             this.monitoringPanel.Controls.Add(this.panelScan);
             this.monitoringPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -55,21 +59,6 @@
             this.monitoringPanel.Name = "monitoringPanel";
             this.monitoringPanel.Size = new System.Drawing.Size(800, 450);
             this.monitoringPanel.TabIndex = 1;
-            // 
-            // buttonSave
-            // 
-            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonSave.FlatAppearance.BorderSize = 0;
-            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonSave.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonSave.ForeColor = System.Drawing.Color.White;
-            this.buttonSave.Location = new System.Drawing.Point(213, 386);
-            this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(382, 30);
-            this.buttonSave.TabIndex = 58;
-            this.buttonSave.Text = "Start simulation";
-            this.buttonSave.UseVisualStyleBackColor = true;
-            this.buttonSave.Click += new System.EventHandler(this.ButtonStartSimulation);
             // 
             // panelInfo
             // 
@@ -205,6 +194,42 @@
             this.label3.Text = "Scan";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // panelImage
+            // 
+            this.panelImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.panelImage.Location = new System.Drawing.Point(0, 149);
+            this.panelImage.Name = "panelImage";
+            this.panelImage.Padding = new System.Windows.Forms.Padding(10);
+            this.panelImage.Size = new System.Drawing.Size(800, 261);
+            this.panelImage.TabIndex = 0;
+            // 
+            // flowLayoutPanel1
+            // 
+            this.flowLayoutPanel1.Controls.Add(this.buttonSave);
+            this.flowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.flowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowLayoutPanel1.Location = new System.Drawing.Point(0, 410);
+            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(800, 40);
+            this.flowLayoutPanel1.TabIndex = 65;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSave.FlatAppearance.BorderSize = 0;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.ForeColor = System.Drawing.Color.White;
+            this.buttonSave.Location = new System.Drawing.Point(415, 3);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(382, 30);
+            this.buttonSave.TabIndex = 60;
+            this.buttonSave.Text = "Start simulation";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.ButtonStartSimulation);
+            // 
             // Simulation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -220,6 +245,7 @@
             this.panelInfo.PerformLayout();
             this.panelScan.ResumeLayout(false);
             this.panelScan.PerformLayout();
+            this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -237,6 +263,8 @@
         private System.Windows.Forms.TableLayoutPanel panelScan;
         private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.Button buttonSave;
+        private System.Windows.Forms.Panel panelImage;
     }
 }
