@@ -29,23 +29,25 @@
         private void InitializeComponent()
         {
             this.monitoringPanel = new System.Windows.Forms.Panel();
+            this.buttonSave = new System.Windows.Forms.Button();
+            this.panelInfo = new System.Windows.Forms.TableLayoutPanel();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.lblTorque = new System.Windows.Forms.Label();
+            this.lblLastScan = new System.Windows.Forms.Label();
             this.panelScan = new System.Windows.Forms.TableLayoutPanel();
             this.txtInput = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
-            this.lblLastScan = new System.Windows.Forms.Label();
-            this.lblTorque = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.panelInfo = new System.Windows.Forms.TableLayoutPanel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
             this.monitoringPanel.SuspendLayout();
-            this.panelScan.SuspendLayout();
             this.panelInfo.SuspendLayout();
+            this.panelScan.SuspendLayout();
             this.SuspendLayout();
             // 
             // monitoringPanel
             // 
+            this.monitoringPanel.Controls.Add(this.buttonSave);
             this.monitoringPanel.Controls.Add(this.panelInfo);
             this.monitoringPanel.Controls.Add(this.panelScan);
             this.monitoringPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -53,6 +55,114 @@
             this.monitoringPanel.Name = "monitoringPanel";
             this.monitoringPanel.Size = new System.Drawing.Size(800, 450);
             this.monitoringPanel.TabIndex = 1;
+            // 
+            // buttonSave
+            // 
+            this.buttonSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonSave.FlatAppearance.BorderSize = 0;
+            this.buttonSave.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSave.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonSave.ForeColor = System.Drawing.Color.White;
+            this.buttonSave.Location = new System.Drawing.Point(213, 386);
+            this.buttonSave.Name = "buttonSave";
+            this.buttonSave.Size = new System.Drawing.Size(382, 30);
+            this.buttonSave.TabIndex = 58;
+            this.buttonSave.Text = "Start simulation";
+            this.buttonSave.UseVisualStyleBackColor = true;
+            this.buttonSave.Click += new System.EventHandler(this.ButtonStartSimulation);
+            // 
+            // panelInfo
+            // 
+            this.panelInfo.ColumnCount = 3;
+            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.panelInfo.Controls.Add(this.label2, 0, 1);
+            this.panelInfo.Controls.Add(this.label1, 0, 0);
+            this.panelInfo.Controls.Add(this.label4, 1, 0);
+            this.panelInfo.Controls.Add(this.label5, 2, 0);
+            this.panelInfo.Controls.Add(this.lblTorque, 2, 1);
+            this.panelInfo.Controls.Add(this.lblLastScan, 1, 1);
+            this.panelInfo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelInfo.Location = new System.Drawing.Point(0, 43);
+            this.panelInfo.Name = "panelInfo";
+            this.panelInfo.RowCount = 2;
+            this.panelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.panelInfo.Size = new System.Drawing.Size(800, 100);
+            this.panelInfo.TabIndex = 64;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label2.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.label2.Location = new System.Drawing.Point(3, 50);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(260, 50);
+            this.label2.TabIndex = 52;
+            this.label2.Text = "N/A";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label1.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.label1.Location = new System.Drawing.Point(3, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(260, 50);
+            this.label1.TabIndex = 46;
+            this.label1.Text = "Screwdriver Status";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label4.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.label4.Location = new System.Drawing.Point(269, 0);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(260, 50);
+            this.label4.TabIndex = 37;
+            this.label4.Text = "Piece Serial";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.label5.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.label5.Location = new System.Drawing.Point(535, 0);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(262, 50);
+            this.label5.TabIndex = 39;
+            this.label5.Text = "Torque";
+            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblTorque
+            // 
+            this.lblTorque.AutoSize = true;
+            this.lblTorque.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblTorque.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.lblTorque.Location = new System.Drawing.Point(535, 50);
+            this.lblTorque.Name = "lblTorque";
+            this.lblTorque.Size = new System.Drawing.Size(262, 50);
+            this.lblTorque.TabIndex = 38;
+            this.lblTorque.Text = "N/A";
+            this.lblTorque.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblLastScan
+            // 
+            this.lblLastScan.AutoSize = true;
+            this.lblLastScan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lblLastScan.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
+            this.lblLastScan.Location = new System.Drawing.Point(269, 50);
+            this.lblLastScan.Name = "lblLastScan";
+            this.lblLastScan.Size = new System.Drawing.Size(260, 50);
+            this.lblLastScan.TabIndex = 36;
+            this.lblLastScan.Text = "Piece Serial";
+            this.lblLastScan.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panelScan
             // 
@@ -95,99 +205,6 @@
             this.label3.Text = "Scan";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblLastScan
-            // 
-            this.lblLastScan.AutoSize = true;
-            this.lblLastScan.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblLastScan.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.lblLastScan.Location = new System.Drawing.Point(269, 50);
-            this.lblLastScan.Name = "lblLastScan";
-            this.lblLastScan.Size = new System.Drawing.Size(260, 50);
-            this.lblLastScan.TabIndex = 36;
-            this.lblLastScan.Text = "Piece Serial";
-            this.lblLastScan.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblTorque
-            // 
-            this.lblTorque.AutoSize = true;
-            this.lblTorque.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTorque.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.lblTorque.Location = new System.Drawing.Point(535, 50);
-            this.lblTorque.Name = "lblTorque";
-            this.lblTorque.Size = new System.Drawing.Size(262, 50);
-            this.lblTorque.TabIndex = 38;
-            this.lblTorque.Text = "N/A";
-            this.lblTorque.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label5.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.label5.Location = new System.Drawing.Point(535, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(262, 50);
-            this.label5.TabIndex = 39;
-            this.label5.Text = "Torque";
-            this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label4.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.label4.Location = new System.Drawing.Point(269, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(260, 50);
-            this.label4.TabIndex = 37;
-            this.label4.Text = "Piece Serial";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // panelInfo
-            // 
-            this.panelInfo.ColumnCount = 3;
-            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.panelInfo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.panelInfo.Controls.Add(this.label2, 0, 1);
-            this.panelInfo.Controls.Add(this.label1, 0, 0);
-            this.panelInfo.Controls.Add(this.label4, 1, 0);
-            this.panelInfo.Controls.Add(this.label5, 2, 0);
-            this.panelInfo.Controls.Add(this.lblTorque, 2, 1);
-            this.panelInfo.Controls.Add(this.lblLastScan, 1, 1);
-            this.panelInfo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelInfo.Location = new System.Drawing.Point(0, 43);
-            this.panelInfo.Name = "panelInfo";
-            this.panelInfo.RowCount = 2;
-            this.panelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.panelInfo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.panelInfo.Size = new System.Drawing.Size(800, 100);
-            this.panelInfo.TabIndex = 64;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label1.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.label1.Location = new System.Drawing.Point(3, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(260, 50);
-            this.label1.TabIndex = 46;
-            this.label1.Text = "Screwdriver Status";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label2.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F);
-            this.label2.Location = new System.Drawing.Point(3, 50);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(260, 50);
-            this.label2.TabIndex = 52;
-            this.label2.Text = "N/A";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // Simulation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -199,10 +216,10 @@
             this.Text = "Simulation";
             this.monitoringPanel.ResumeLayout(false);
             this.monitoringPanel.PerformLayout();
-            this.panelScan.ResumeLayout(false);
-            this.panelScan.PerformLayout();
             this.panelInfo.ResumeLayout(false);
             this.panelInfo.PerformLayout();
+            this.panelScan.ResumeLayout(false);
+            this.panelScan.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -220,5 +237,6 @@
         private System.Windows.Forms.TableLayoutPanel panelScan;
         private System.Windows.Forms.TextBox txtInput;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button buttonSave;
     }
 }

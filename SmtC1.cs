@@ -287,7 +287,7 @@ namespace CESATAutomationDevelop
             switch(parameters[0])
             {
                 case nameof(REQ.REQ100): REQ100(parameters); break;
-                case nameof(DATA.DATA100): Console.WriteLine(nameof(DATA.DATA100)); TighteningDataReceived?.Invoke(this, new IRS232Data100EventArgs(parameters));
+                case nameof(DATA.DATA100): TighteningDataReceived?.Invoke(this, new IRS232Data100EventArgs(parameters));
                     break;
                 default: break;
             }

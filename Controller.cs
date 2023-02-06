@@ -88,6 +88,7 @@ namespace CESATAutomationDevelop
         public string tempBuffer = "";
         private string tempCommand = "";
         private int piece = 0;
+        private bool tightenSaved = false;
         #endregion
         #region WINDOW BORDERLESS MOVE AND RESIZE VARIABLES
         public const int WM_NCLBUTTONDOWN = 0xA1;
@@ -125,11 +126,14 @@ namespace CESATAutomationDevelop
             simulation.BringToFront();
             simulation.Show();
             (simulation as Screens.Simulation).Scanning += new EventHandler(Scanning);
+            (simulation as Screens.Simulation).StartSimulation += new EventHandler(StartSimulation);
 
             //this.panelContent.Controls.Add(new Simulation());
+            /*
             Task.Delay(5000).ContinueWith((task) => {
                 Simulation();
             });
+             */
             //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
@@ -142,15 +146,16 @@ namespace CESATAutomationDevelop
              */
         }
 
+        private void StartSimulation(object sender, EventArgs e) => Simulation(sender, e);
+
         private void SmtC1_TighteningDataReceived(object sender, EventArgs e)
         {
-            Console.WriteLine("SmtC1_TighteningDataReceived");
-            Console.WriteLine(piece > 0);
             if (piece > 0) SaveTighteningData((e as IRS232Data100EventArgs).Parameters);
         }
         private async void SaveTighteningData(string[] parameters)
         {
             var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], piece);
+            //Console.WriteLine(String.Format("query: {0}", query));
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 await connection.OpenAsync();
@@ -158,8 +163,10 @@ namespace CESATAutomationDevelop
                 //await command.ExecuteNonQueryAsync();
                 using (SqlDataReader datareader = await command.ExecuteReaderAsync())
                     if (datareader.Read())
-                        Console.WriteLine(datareader["id"]);
+                        Console.WriteLine("datareader[\"id\"]"+datareader["id"]);
             }
+            Console.WriteLine("SmtC1_TighteningData Saved");
+            tightenSaved = true;
         }
 
         private void Scanning(object sender, EventArgs e)
@@ -179,46 +186,72 @@ namespace CESATAutomationDevelop
                         this.piece = (int)datareader["id"];
             }
         }
-        public async void Simulation()
+        public async void Simulation(object sender, EventArgs e)
         {
-            int writeDelay = 150; //relay is 150ms delay
-            int screwingDelay = 1000; //wait time between screws is 1 second delay
-            int scannDelay = 50;
-
-            //resetear interfaz
-            Console.WriteLine("daq: Reset");
-            daq.ResetOutput();
-            //Simulation
-            Console.WriteLine("Start");
-
-            int tr = 0;
-            do
+            if (piece == 0)
             {
-                Console.WriteLine("Cobot moving");
-                daq.WriteBit(1, 0, 1);
+                ShowMessage("Escanee una serie primero.", "Sin serie.");
+            } else
+            {
+                int writeDelay = 150; //relay is 150ms delay
+                int screwingDelay = 1000; //wait time between screws is 1 second delay
+                int scannDelay = 100;
+
+                //resetear interfaz
+                Console.WriteLine("IO Reset");
+                daq.ResetOutput();
+                //Simulation
+                Console.WriteLine("Start");
+
+                int tr = 0;
+                do
+                {
+                    Console.WriteLine("Cobot moving");
+                    daq.WriteBit(1, 0, 1);//set robot moving
+                    await Task.Delay(writeDelay);
+                    while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay); //waiting cobot stop moving
+                    Console.WriteLine("Cobot arrived");
+                    daq.WriteBit(1, 0, 0);//reset robot moving
+
+                    if(tr > 0)
+                    {
+                        while (!tightenSaved) await Task.Delay(100); //Waiting tighten response
+                        tightenSaved = false;
+                    }
+
+
+                    Console.WriteLine("Screwing ");
+                    daq.WriteBit(0, 0, 1);
+                    await Task.Delay(writeDelay);
+
+
+                    while(daq.DataPort0==0x0) await Task.Delay(scannDelay);
+                    Console.WriteLine("Screwing Stop");
+                    daq.WriteBit(0, 0, 0);
+
+
+                    tr++;
+                }while (daq.ReadBit(0,2) == 0);
+
+                Console.WriteLine("Cobot returning");
+                daq.WriteBit(1, 0, 1);//set robot moving
                 await Task.Delay(writeDelay);
-                while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay);
-                daq.WriteBit(1, 0, 0);
+                while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay); //waiting cobot stop moving
+                Console.WriteLine("Cobot arrived");
+                daq.WriteBit(1, 0, 0);//reset robot moving
 
+                while (!tightenSaved) await Task.Delay(25); //Waiting tighten response
+                tightenSaved = false;
 
-                Console.WriteLine("Screwing ");
-                daq.WriteBit(0, 0, 1);
-                await Task.Delay(writeDelay);
+                Console.WriteLine("End");
+                //resetear interfaz
+                Console.WriteLine("IO Reset");
+                daq.ResetOutput();
+                piece = 0;
+                Control[] controls = ((sender as Control).FindForm() as Screens.Simulation).Controls.Find("txtInput", true);
+                (controls[0] as System.Windows.Forms.TextBox).Text = String.Empty;
+            }
 
-                Console.WriteLine("Scanning");
-                while(daq.DataPort0==0x0) await Task.Delay(scannDelay);
-                Console.WriteLine("Screwing Stop");
-                daq.WriteBit(0, 0, 0);
-
-                await Task.Delay(screwingDelay);
-                tr++;
-            }while (daq.ReadBit(0,2) == 0);
-            
-            Console.WriteLine("End");
-            //resetear interfaz
-            Console.WriteLine("daq: Reset");
-            daq.ResetOutput();
-            piece = 0;
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -232,7 +265,10 @@ namespace CESATAutomationDevelop
                     break;
             }
         }
-        private void Daq_Port0Changed(object sender, EventArgs e) => Console.WriteLine(String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0));
+        private void Daq_Port0Changed(object sender, EventArgs e) => Console.Write(
+            ""
+            //String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0)
+            );
         private void RS232_OnDataReceived(object sender, EventArgs e)
         {
             string data = (e as RS232EventArgs).value;
