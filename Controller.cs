@@ -100,6 +100,7 @@ namespace CESATAutomationDevelop
         private const int cGrip = 16;
         private const int cCaption = 32;
         #endregion
+        #region CONSTRUCTOR
         public Controller()
         {
             InitializeComponent();
@@ -111,7 +112,7 @@ namespace CESATAutomationDevelop
             smtC1.PropertyChanged += new PropertyChangedEventHandler(SmtC1_PropertyChanged);
             smtC1.TighteningDataReceived += new EventHandler(SmtC1_TighteningDataReceived);
             serial.RS232DataReceived += new EventHandler(RS232_OnDataReceived);
-            daq.Port0Update = new EventHandler(Daq_Port0Changed);
+            //daq.Port0Update = new EventHandler(Daq_Port0Changed);
 
             Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
                 serial.Write(smtC1.CMD100());
@@ -129,79 +130,59 @@ namespace CESATAutomationDevelop
             (simulation as Screens.Simulation).StartSimulation += new EventHandler(Simulation_Start);
             (simulation as Screens.Simulation).PropertyChanged += new PropertyChangedEventHandler(Simulation_PropertyChanged);
 
-            //this.panelContent.Controls.Add(new Simulation());
-            /*
-            Task.Delay(5000).ContinueWith((task) => {
-                Simulation();
-            });
-             */
-            //this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            //this.DoubleBuffered = true;
             this.SetStyle(ControlStyles.ResizeRedraw, true);
-            //serialPort = new SerialSmtC1();
-            //STYLES
             ThemeColor();
-            /*
-            EAACTDSRS232 eaaSerial = new EAACTDSRS232(this);
-            eaaSerial.showmethemagic();
-             */
         }
-        private void Simulation_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        #endregion
+        private void Simulation_PropertyChanged(object sender, PropertyChangedEventArgs e) =>
+            ((sender as Screens.Simulation).Controls.Find("buttonSave", true)[0] as System.Windows.Forms.Button).Enabled = !(sender as Screens.Simulation).SimulationRunning;
+        private async void SmtC1_TighteningDataReceived(object sender, EventArgs e)
         {
-            Console.WriteLine(""+(sender as Screens.Simulation).SimulationRunning);
-        }
-
-        private void Simulation_Start(object sender, EventArgs e) => Simulation(sender, e);
-
-        private void SmtC1_TighteningDataReceived(object sender, EventArgs e)
-        {
-            if (piece > 0) SaveTighteningData((e as IRS232Data100EventArgs).Parameters);
-        }
-        private async void SaveTighteningData(string[] parameters)
-        {
-            var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], piece);
-            //Console.WriteLine(String.Format("query: {0}", query));
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            Console.WriteLine("SmtC1_TighteningDataReceived");
+            if (piece > 0)
             {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand(query, connection);
-                //await command.ExecuteNonQueryAsync();
-                using (SqlDataReader datareader = await command.ExecuteReaderAsync())
-                    if (datareader.Read())
-                        Console.WriteLine("datareader[\"id\"]"+datareader["id"]);
+                string[] parameters =(e as IRS232Data100EventArgs).Parameters;
+                var query = String.Format("INSERT INTO [CESAT].[dbo].[TighteningData] ([Date],[IdSerie],[DeviceID],[ScrewSerial],[DeviceSerial],[Job],[Js],[Ts],[ProgramName],[TorqueUnit],[FasteningTimeMs],[FasteningThread],[RemainingScrews],[TotalScrews],[FasteningStatus],[NSAS]) VALUES (GETDATE(),{14},{0},'{1}','{2}',{3},{4},{5},'{6}',{7},{8},{9},{10},{11},'{12}',{13})", parameters[10], parameters[11], parameters[12], parameters[14], parameters[15], parameters[16], parameters[17], parameters[20], parameters[21], parameters[22], Int32.Parse(parameters[23].Substring(0, 2)), Int32.Parse(parameters[23].Substring(3)), parameters[25], parameters[26], piece);
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(query, connection);
+                    using (SqlDataReader datareader = await command.ExecuteReaderAsync())
+                        if (datareader.Read())
+                            Console.WriteLine("datareader[\"id\"]"+datareader["id"]);
+                }
+                Console.WriteLine(".");
+                tightenSaved = true;
             }
-            Console.WriteLine("SmtC1_TighteningData Saved");
-            tightenSaved = true;
         }
-
-        private void Simulation_Scan(object sender, EventArgs e)
+        private async void Simulation_Scan(object sender, EventArgs e)
         {
             if ((e as KeyEventArgs).KeyCode == Keys.Return)
-                NewPiece((sender as System.Windows.Forms.TextBox).Text);
-        }
-        private async void NewPiece(string piece)
-        {
-            var query = String.Format("INSERT INTO CESAT.dbo.Series OUTPUT Inserted.Id VALUES ('{0}',GETDATE(),1)", piece);
-            using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                await connection.OpenAsync();
-                SqlCommand command = new SqlCommand(query, connection);
-                using (SqlDataReader datareader = await command.ExecuteReaderAsync())
-                    if (datareader.Read())
-                        this.piece = (int)datareader["id"];
+                
+                var query = String.Format("INSERT INTO CESAT.dbo.Series OUTPUT Inserted.Id VALUES ('{0}',GETDATE(),1)", (sender as System.Windows.Forms.TextBox).Text);
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    await connection.OpenAsync();
+                    SqlCommand command = new SqlCommand(query, connection);
+                    using (SqlDataReader datareader = await command.ExecuteReaderAsync())
+                        if (datareader.Read())
+                            this.piece = (int)datareader["id"];
+                }
             }
         }
-        public async void Simulation(object sender, EventArgs e)
+        public async void Simulation_Start(object sender, EventArgs e)
         {
-            Screens.Simulation senderForm = ((sender as Control).FindForm() as Screens.Simulation);
+            Screens.Simulation senderForm = (sender as Control).FindForm() as Screens.Simulation;
+            senderForm.SimulationRunning = true;
             if (piece == 0)
             {
                 ShowMessage("Escanee una serie primero.", "Sin serie.");
             } else
             {
                 int writeDelay = 150; //relay is 150ms delay
-                int screwingDelay = 1000; //wait time between screws is 1 second delay
-                int scannDelay = 100;
+                int scannDelay = 25;
+                int tightenSavedDelay = 50;
                 List<Image> images = new List<Image>() { Properties.Resources.cover_scw1, Properties.Resources.cover_scw2, Properties.Resources.cover_scw3, Properties.Resources.cover_scw4, Properties.Resources.cover };
                 //resetear interfaz
                 Console.WriteLine("IO Reset");
@@ -214,43 +195,53 @@ namespace CESATAutomationDevelop
                 {
                     senderForm.SimulationImage(images[tr]);
 
-                    Console.WriteLine("Cobot moving");
                     daq.WriteBit(1, 0, 1);//set robot moving
-                    await Task.Delay(writeDelay);
+                    Console.WriteLine("Cobot on");
+                    //await Task.Delay(writeDelay);
                     while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay); //waiting cobot stop moving
-                    Console.WriteLine("Cobot arrived");
-                    daq.WriteBit(1, 0, 0);//reset robot moving
+                    daq.WriteBit(1, 0, 0);//reset moving
+                    Console.WriteLine("Cobot off");
 
                     if(tr > 0)
                     {
-                        while (!tightenSaved) await Task.Delay(100); //Waiting tighten response
+                        while (!tightenSaved)
+                        {
+                            Console.WriteLine(".");
+                            await Task.Delay(tightenSavedDelay); //Waiting tighten response
+                        }
                         tightenSaved = false;
                     }
 
 
-                    Console.WriteLine("Screwing ");
                     daq.WriteBit(0, 0, 1);
+                    Console.WriteLine("Screw on ");
                     await Task.Delay(writeDelay);
 
 
                     while(daq.DataPort0==0x0) await Task.Delay(scannDelay);
-                    Console.WriteLine("Screwing Stop");
                     daq.WriteBit(0, 0, 0);
+                    Console.WriteLine("Screw off");
 
 
                     tr++;
+                    Console.WriteLine("daq.ReadBit(0,2) == 0:"+ (daq.ReadBit(0, 2) == 0));
                 }while (daq.ReadBit(0,2) == 0);
 
-                senderForm.SimulationImage(images[tr++]);
+                senderForm.SimulationImage(images[images.Count-1]);
 
-                Console.WriteLine("Cobot returning");
-                daq.WriteBit(1, 0, 1);//set robot moving
-                await Task.Delay(writeDelay);
+                Console.WriteLine("Cobot returning on");
+                daq.WriteBit(1, 1, 1);//set robot moving
+                //await Task.Delay(writeDelay);
                 while (daq.ReadBit(1, 7) == 0) await Task.Delay(scannDelay); //waiting cobot stop moving
-                Console.WriteLine("Cobot arrived");
-                daq.WriteBit(1, 0, 0);//reset robot moving
+                Console.WriteLine("Cobot returning off");
+                daq.WriteBit(1, 1, 0);//reset robot moving
 
-                while (!tightenSaved) await Task.Delay(25); //Waiting tighten response
+
+                while (!tightenSaved)
+                {
+                    Console.WriteLine(".");
+                    await Task.Delay(tightenSavedDelay); //Waiting tighten response
+                }
                 tightenSaved = false;
 
                 Console.WriteLine("End");
@@ -261,6 +252,7 @@ namespace CESATAutomationDevelop
                 Control[] controls = senderForm.Controls.Find("txtInput", true);
                 (controls[0] as System.Windows.Forms.TextBox).Text = String.Empty;
             }
+            senderForm.SimulationRunning = false;
         }
         private void SmtC1_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -274,10 +266,7 @@ namespace CESATAutomationDevelop
                     break;
             }
         }
-        private void Daq_Port0Changed(object sender, EventArgs e) => Console.Write(
-            ""
-            //String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0)
-            );
+        //private void Daq_Port0Changed(object sender, EventArgs e) => Console.Write(""/*String.Format("OnPort0Update: {0}", (sender as UsbDaq).DataPort0)*/);
         private void RS232_OnDataReceived(object sender, EventArgs e)
         {
             string data = (e as RS232EventArgs).value;
@@ -373,10 +362,6 @@ namespace CESATAutomationDevelop
                 }
             }
         }
-        public string rollbackQuery(String query)
-        {
-            return String.Format("begin transaction test {0} rollback transaction test", query);
-        }
         public void updateTorque(string torque)
         {
             //Screens.Monitoring monitoring = (Screens.Monitoring)activeForm;
@@ -426,7 +411,6 @@ namespace CESATAutomationDevelop
         }
         #endregion
         #region METHODS FOR CONTROL EVENTS
-
         /// <summary>
         /// Closing the entire application from a button within the form.
         /// </summary>
@@ -439,7 +423,6 @@ namespace CESATAutomationDevelop
                 if (control is Screens.IOCard)
                     ((Screens.IOCard)control).ResetOutput();
         }
-
         /// <summary>
         /// Close the serial port before closing the application. 
         /// </summary>
@@ -449,7 +432,6 @@ namespace CESATAutomationDevelop
         {
             serialPort?.ClosePort();
         }
-
         /// <summary>
         /// Capture the mouse movement in the panel title for move the window across the screen.
         /// </summary>
@@ -460,7 +442,6 @@ namespace CESATAutomationDevelop
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-
         private void buttonMenu_Click(object sender, EventArgs e)
         {
             bool found = false;
@@ -524,7 +505,6 @@ namespace CESATAutomationDevelop
                 }
             }
         }
-
         private bool SearchUSBIO(string name)
         {
             var usbDevices = USBDeviceInfo.GetUSBDevices();
@@ -537,7 +517,6 @@ namespace CESATAutomationDevelop
             }
             return false;
         }
-
         private bool SearchPanelContent(Type type)
         {
             foreach (Control control in panelContent.Controls)
@@ -545,7 +524,6 @@ namespace CESATAutomationDevelop
                     return true;
             return false;
         }
-
         /// <summary>
         /// Capture the mouse movement in the label title for move the window across the screen.
         /// </summary>
@@ -556,7 +534,6 @@ namespace CESATAutomationDevelop
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
-
         /// <summary>
         /// Changes the buttonClose image when the mouse enter across the button
         /// </summary>
@@ -566,7 +543,6 @@ namespace CESATAutomationDevelop
         {
             buttonClose.BackgroundImage = Properties.Resources.icons8_close_window_96_red;
         }
-
         /// <summary>
         /// Changes the buttonClose image when the mouse leaves the button.
         /// </summary>
@@ -576,7 +552,6 @@ namespace CESATAutomationDevelop
         {
             buttonClose.BackgroundImage = Properties.Resources.icons8_close_window_96_gray;
         }
-
         /// <summary>
         /// Changes the buttonCloseTab image when the mouse enter across the button
         /// </summary>
@@ -586,7 +561,6 @@ namespace CESATAutomationDevelop
         {
             //buttonCloseTab.BackgroundImage = Properties.Resources.icons8_close_96_tab_red;
         }
-
         /// <summary>
         /// Changes the buttonCloseTab image when the mouse leaves the button.
         /// <param name="sender"></param>
@@ -596,7 +570,6 @@ namespace CESATAutomationDevelop
         {
             //buttonCloseTab.BackgroundImage = Properties.Resources.icons8_close_96_tab_white;
         }
-
         /// <summary>
         /// Closes the active screen selected in the left panel.
         /// </summary>
@@ -618,7 +591,6 @@ namespace CESATAutomationDevelop
             }
              */
         }
-
         internal void UpdateSettings()
         {
             foreach (Control control in panelContent.Controls)
