@@ -32,8 +32,6 @@ namespace CESATAutomationDevelop
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Controller));
             this.panelMenu = new System.Windows.Forms.Panel();
-            this.buttonIOCard = new System.Windows.Forms.Button();
-            this.buttonFixture = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonMonitor = new System.Windows.Forms.Button();
             this.panelLogo = new System.Windows.Forms.Panel();
@@ -50,8 +48,6 @@ namespace CESATAutomationDevelop
             // panelMenu
             // 
             this.panelMenu.BackColor = System.Drawing.SystemColors.ActiveBorder;
-            this.panelMenu.Controls.Add(this.buttonIOCard);
-            this.panelMenu.Controls.Add(this.buttonFixture);
             this.panelMenu.Controls.Add(this.buttonSettings);
             this.panelMenu.Controls.Add(this.buttonMonitor);
             this.panelMenu.Controls.Add(this.panelLogo);
@@ -60,50 +56,6 @@ namespace CESATAutomationDevelop
             this.panelMenu.Name = "panelMenu";
             this.panelMenu.Size = new System.Drawing.Size(200, 500);
             this.panelMenu.TabIndex = 28;
-            // 
-            // buttonIOCard
-            // 
-            this.buttonIOCard.BackColor = System.Drawing.Color.Transparent;
-            this.buttonIOCard.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonIOCard.FlatAppearance.BorderSize = 0;
-            this.buttonIOCard.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.buttonIOCard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonIOCard.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonIOCard.ForeColor = System.Drawing.Color.White;
-            this.buttonIOCard.Image = global::CESATAutomationDevelop.Properties.Resources.icons8_chip_white_24;
-            this.buttonIOCard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonIOCard.Location = new System.Drawing.Point(0, 262);
-            this.buttonIOCard.Name = "buttonIOCard";
-            this.buttonIOCard.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.buttonIOCard.Size = new System.Drawing.Size(200, 54);
-            this.buttonIOCard.TabIndex = 33;
-            this.buttonIOCard.Text = " I/O";
-            this.buttonIOCard.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonIOCard.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonIOCard.UseVisualStyleBackColor = false;
-            this.buttonIOCard.Click += new System.EventHandler(this.buttonMenu_Click);
-            // 
-            // buttonFixture
-            // 
-            this.buttonFixture.BackColor = System.Drawing.Color.Transparent;
-            this.buttonFixture.Dock = System.Windows.Forms.DockStyle.Top;
-            this.buttonFixture.FlatAppearance.BorderSize = 0;
-            this.buttonFixture.FlatAppearance.MouseOverBackColor = System.Drawing.Color.DimGray;
-            this.buttonFixture.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonFixture.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFixture.ForeColor = System.Drawing.Color.White;
-            this.buttonFixture.Image = ((System.Drawing.Image)(resources.GetObject("buttonFixture.Image")));
-            this.buttonFixture.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonFixture.Location = new System.Drawing.Point(0, 208);
-            this.buttonFixture.Name = "buttonFixture";
-            this.buttonFixture.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.buttonFixture.Size = new System.Drawing.Size(200, 54);
-            this.buttonFixture.TabIndex = 32;
-            this.buttonFixture.Text = " Fixture";
-            this.buttonFixture.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.buttonFixture.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.buttonFixture.UseVisualStyleBackColor = false;
-            this.buttonFixture.Click += new System.EventHandler(this.buttonMenu_Click);
             // 
             // buttonSettings
             // 
@@ -174,12 +126,12 @@ namespace CESATAutomationDevelop
             // 
             // label12
             // 
-            this.label12.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.label12.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
             this.label12.BackColor = System.Drawing.Color.Transparent;
             this.label12.Font = new System.Drawing.Font("Lucida Sans Unicode", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label12.ForeColor = System.Drawing.Color.White;
-            this.label12.Location = new System.Drawing.Point(305, 37);
+            this.label12.Location = new System.Drawing.Point(282, 39);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(180, 34);
             this.label12.TabIndex = 53;
@@ -233,7 +185,7 @@ namespace CESATAutomationDevelop
             this.panelContent.Size = new System.Drawing.Size(771, 390);
             this.panelContent.TabIndex = 30;
             // 
-            // SMTC1Controller
+            // Controller
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(983, 500);
@@ -244,7 +196,7 @@ namespace CESATAutomationDevelop
             this.Controls.Add(this.panelContent);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimumSize = new System.Drawing.Size(800, 500);
-            this.Name = "SMTC1Controller";
+            this.Name = "Controller";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SMT-C1 Controller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SMTC1Controller_FormClosing);
@@ -263,10 +215,8 @@ namespace CESATAutomationDevelop
         private System.Windows.Forms.Button buttonClose;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button buttonSettings;
-        private System.Windows.Forms.Button buttonFixture;
         private System.Windows.Forms.Panel panelBottom;
         private System.Windows.Forms.Panel panelRight;
-        private System.Windows.Forms.Button buttonIOCard;
         private System.Windows.Forms.Panel panelContent;
     }
 }

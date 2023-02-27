@@ -79,6 +79,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="RS232EventArgs.cs" />
+    <Compile Include="Screens\ChasisScrewing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Screens\ChasisScrewing.Designer.cs">
+      <DependentUpon>ChasisScrewing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Screens\IOCard.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,6 +127,9 @@
     <Compile Include="Time.cs" />
     <Compile Include="UsbDaq.cs" />
     <Compile Include="USBDeviceInfo.cs" />
+    <EmbeddedResource Include="Screens\ChasisScrewing.resx">
+      <DependentUpon>ChasisScrewing.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Screens\IOCard.resx">
       <DependentUpon>IOCard.cs</DependentUpon>
     </EmbeddedResource>

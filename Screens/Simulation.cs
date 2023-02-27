@@ -17,10 +17,8 @@ namespace CESATAutomationDevelop.Screens
         public event EventHandler StartSimulation;
         public event PropertyChangedEventHandler PropertyChanged;
         private bool simulationRunning;
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
-        {
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "") =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
         public bool SimulationRunning { get => simulationRunning; set
             {
                 if(value != simulationRunning)

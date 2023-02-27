@@ -104,6 +104,10 @@ namespace CESATAutomationDevelop
         public Controller()
         {
             InitializeComponent();
+            ChasisScrewing chasisScrewing = new ChasisScrewing();
+            chasisScrewing.OnTextBoxScan += ChasisScrewing_OnTextBoxScan;
+            PanelContentAddForm(chasisScrewing);
+            /*
             smtC1 = new SmtC1();
             serial = new RS232("COM6");
             daq = new UsbDaq("USB-5862,BID#1");
@@ -114,7 +118,7 @@ namespace CESATAutomationDevelop
             serial.RS232DataReceived += new EventHandler(RS232_OnDataReceived);
             //daq.Port0Update = new EventHandler(Daq_Port0Changed);
 
-            Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
+            Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: Brant mail -> Meeting for SMT-CI
                 serial.Write(smtC1.CMD100());
             });
 
@@ -129,11 +133,29 @@ namespace CESATAutomationDevelop
             (simulation as Screens.Simulation).Scanning += new EventHandler(Simulation_Scan);
             (simulation as Screens.Simulation).StartSimulation += new EventHandler(Simulation_Start);
             (simulation as Screens.Simulation).PropertyChanged += new PropertyChangedEventHandler(Simulation_PropertyChanged);
+            */
 
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             ThemeColor();
         }
+
+        private void ChasisScrewing_OnTextBoxScan(object sender, EventArgs e)
+        {
+            if ((e as KeyEventArgs).KeyCode == Keys.Enter) {
+                Console.WriteLine("Scanned");
+            }
+        }
         #endregion
+        private void PanelContentAddForm(Form form)
+        {
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+            panelContent.Controls.Add(form);
+            panelContent.Tag = form;
+            form.BringToFront();
+            form.Show();
+        }
         private void Simulation_PropertyChanged(object sender, PropertyChangedEventArgs e) =>
             ((sender as Screens.Simulation).Controls.Find("buttonSave", true)[0] as System.Windows.Forms.Button).Enabled = !(sender as Screens.Simulation).SimulationRunning;
         private async void SmtC1_TighteningDataReceived(object sender, EventArgs e)
@@ -463,6 +485,7 @@ namespace CESATAutomationDevelop
                         found = true;
                         break;
                     }
+                    /*
                     if (((System.Windows.Forms.Form)control) is Screens.IOCard && sender == buttonIOCard)
                     {
                         control.BringToFront();
@@ -470,6 +493,7 @@ namespace CESATAutomationDevelop
                         found = true;
                         break;
                     }
+                    */
                 }
             }
             if(found == false || panelContent.Controls.Count == 0)
@@ -491,6 +515,7 @@ namespace CESATAutomationDevelop
                         MessageBox.Show("Primero abra el puerto de comunicación.", "Puerto cerrado.", MessageBoxButtons.OK);
                     }
                 }
+                /*
                 else if (sender == buttonIOCard)
                 {
                     if (SearchUSBIO("VID_1809&PID_5862"))
@@ -503,6 +528,7 @@ namespace CESATAutomationDevelop
                         MessageBox.Show("Conecte el dispositivo.", "Dispositivo desconectado.", MessageBoxButtons.OK);
                     }
                 }
+                */
             }
         }
         private bool SearchUSBIO(string name)
