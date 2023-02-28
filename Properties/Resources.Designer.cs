@@ -63,6 +63,26 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap belden_white_logo_v2 {
+            get {
+                object obj = ResourceManager.GetObject("belden_white_logo_v2", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap bluelogo {
+            get {
+                object obj = ResourceManager.GetObject("bluelogo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cover {
             get {
                 object obj = ResourceManager.GetObject("cover", resourceCulture);
@@ -126,6 +146,26 @@ namespace CESATAutomationDevelop.Properties {
         internal static System.Drawing.Bitmap eatontransparent {
             get {
                 object obj = ResourceManager.GetObject("eatontransparent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_cable_de_red_24_white {
+            get {
+                object obj = ResourceManager.GetObject("icons8_cable_de_red_24_white", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap icons8_cable_de_red_50_white {
+            get {
+                object obj = ResourceManager.GetObject("icons8_cable_de_red_50_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

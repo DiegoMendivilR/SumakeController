@@ -104,10 +104,11 @@ namespace CESATAutomationDevelop
         public Controller()
         {
             InitializeComponent();
+            PanelContentAddForm(new Belden());
+            /*
             ChasisScrewing chasisScrewing = new ChasisScrewing();
             chasisScrewing.OnTextBoxScan += ChasisScrewing_OnTextBoxScan;
             PanelContentAddForm(chasisScrewing);
-            /*
             smtC1 = new SmtC1();
             serial = new RS232("COM6");
             daq = new UsbDaq("USB-5862,BID#1");
