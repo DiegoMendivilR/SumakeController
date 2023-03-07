@@ -63,6 +63,36 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap chip_white_24 {
+            get {
+                object obj = ResourceManager.GetObject("chip_white_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap close_window_96_gray {
+            get {
+                object obj = ResourceManager.GetObject("close_window_96_gray", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap close_window_96_red {
+            get {
+                object obj = ResourceManager.GetObject("close_window_96_red", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap cover {
             get {
                 object obj = ResourceManager.GetObject("cover", resourceCulture);
@@ -133,9 +163,9 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_chip_white_24 {
+        internal static System.Drawing.Bitmap fixture_24_white {
             get {
-                object obj = ResourceManager.GetObject("icons8_chip_white_24", resourceCulture);
+                object obj = ResourceManager.GetObject("fixture_24_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +173,9 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_chip_white_96 {
+        internal static System.Drawing.Bitmap monitoring_24_white {
             get {
-                object obj = ResourceManager.GetObject("icons8_chip_white_96", resourceCulture);
+                object obj = ResourceManager.GetObject("monitoring_24_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,9 +183,9 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_close_96_tab_red {
+        internal static System.Drawing.Bitmap robot_arm_24_white {
             get {
-                object obj = ResourceManager.GetObject("icons8_close_96_tab_red", resourceCulture);
+                object obj = ResourceManager.GetObject("robot_arm_24_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -163,29 +193,9 @@ namespace CESATAutomationDevelop.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap icons8_close_96_tab_white {
+        internal static System.Drawing.Bitmap wrench_24_white {
             get {
-                object obj = ResourceManager.GetObject("icons8_close_96_tab_white", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_close_window_96_gray {
-            get {
-                object obj = ResourceManager.GetObject("icons8_close_window_96_gray", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap icons8_close_window_96_red {
-            get {
-                object obj = ResourceManager.GetObject("icons8_close_window_96_red", resourceCulture);
+                object obj = ResourceManager.GetObject("wrench_24_white", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

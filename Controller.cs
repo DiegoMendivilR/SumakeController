@@ -76,14 +76,13 @@ namespace CESATAutomationDevelop
     public partial class Controller : Form
     {
         #region PROPERTIES
-        private SerialSmtC1 serialPort;
         private Serie serie = new Serie();
         String connectionString = ConfigurationManager.ConnectionStrings["think"].ConnectionString;
         private Form activeForm;
         private System.Windows.Forms.Button selectedButtonScreen;
         public RS232 serial;
         public UsbDaq daq;
-        public SmtC1 smtC1;
+        public SmtC1 smt;
         public CobotSimulated cobot;
         public string tempBuffer = "";
         private string tempCommand = "";
@@ -104,18 +103,27 @@ namespace CESATAutomationDevelop
         public Controller()
         {
             InitializeComponent();
-            smtC1 = new SmtC1();
-            serial = new RS232("COM6");
+            smt = new SmtC1();
+            serial = new RS232();
+
+            ButtonMenuForm buttonSettings2 = new ButtonMenuForm(new Screens.Settings(serial, smt), "buttonSettings2","ASD2", Resources.wrench_24_white);
+            panelMenu.Controls.Add(buttonSettings2);
+            buttonSettings2.BringToFront();
+            panelContent.Controls.Add(buttonSettings2.Form);
+            buttonSettings2.ShowForm();
+            //Console.WriteLine(buttonSettings2.Form.GetType());
+            //form.BringToFront();
+            /*
             daq = new UsbDaq("USB-5862,BID#1");
             cobot = new CobotSimulated();
 
-            smtC1.PropertyChanged += new PropertyChangedEventHandler(SmtC1_PropertyChanged);
-            smtC1.TighteningDataReceived += new EventHandler(SmtC1_TighteningDataReceived);
+            smt.PropertyChanged += new PropertyChangedEventHandler(SmtC1_PropertyChanged);
+            smt.TighteningDataReceived += new EventHandler(SmtC1_TighteningDataReceived);
             serial.RS232DataReceived += new EventHandler(RS232_OnDataReceived);
             //daq.Port0Update = new EventHandler(Daq_Port0Changed);
 
             Task.Delay(2500).ContinueWith((task) => { //Engage Screwdriver ref: brant mail -> Meeting for SMT-CI
-                serial.Write(smtC1.CMD100());
+                serial.Write(smt.CMD100());
             });
 
             Form simulation = new Screens.Simulation();
@@ -129,7 +137,7 @@ namespace CESATAutomationDevelop
             (simulation as Screens.Simulation).Scanning += new EventHandler(Simulation_Scan);
             (simulation as Screens.Simulation).StartSimulation += new EventHandler(Simulation_Start);
             (simulation as Screens.Simulation).PropertyChanged += new PropertyChangedEventHandler(Simulation_PropertyChanged);
-
+             */
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             ThemeColor();
         }
@@ -166,8 +174,7 @@ namespace CESATAutomationDevelop
                     await connection.OpenAsync();
                     SqlCommand command = new SqlCommand(query, connection);
                     using (SqlDataReader datareader = await command.ExecuteReaderAsync())
-                        if (datareader.Read())
-                            this.piece = (int)datareader["id"];
+                        if (datareader.Read()) piece = (int)datareader["id"];
                 }
             }
         }
@@ -271,7 +278,7 @@ namespace CESATAutomationDevelop
         {
             string data = (e as RS232EventArgs).value;
             if (serial.IsOpen && ValidateCommand(data))
-                tempBuffer = smtC1.Listener(CommandParameters(data));
+                tempBuffer = smt.Listener(CommandParameters(data));
             else
                 tempBuffer += data;
         }
@@ -430,7 +437,7 @@ namespace CESATAutomationDevelop
         /// <param name="e"></param>
         private void SMTC1Controller_FormClosing(object sender, FormClosingEventArgs e)
         {
-            serialPort?.ClosePort();
+            serial?.Close();
         }
         /// <summary>
         /// Capture the mouse movement in the panel title for move the window across the screen.
@@ -442,9 +449,18 @@ namespace CESATAutomationDevelop
             ReleaseCapture();
             SendMessage(this.Handle, 0x112, 0xf012, 0);
         }
+        private Form ControlsFindForm(Type type)
+        {
+            foreach (Control control in panelContent.Controls)
+                if (control is System.Windows.Forms.Form && ((System.Windows.Forms.Form)control) is Screens.Monitoring)
+                    return (System.Windows.Forms.Form)control;
+            return null;
+        }
         private void buttonMenu_Click(object sender, EventArgs e)
         {
-            bool found = false;
+
+            /*
+            Form form;
             foreach(Control control in panelContent.Controls)
             {
                 if(control is System.Windows.Forms.Form)
@@ -472,18 +488,20 @@ namespace CESATAutomationDevelop
                     }
                 }
             }
+             */
+            /*
             if(found == false || panelContent.Controls.Count == 0)
             {
                 if (sender == buttonMonitor)
                 {
-                    OpenChildForm(new Screens.Monitoring(serialPort),sender);
+                    OpenChildForm(new Screens.Monitoring(serial,smt),sender);
                     SetButtonColors((System.Windows.Forms.Button)sender);
                 }
                 else if (sender == buttonSettings)
                 {
-                    if(SearchPanelContent(typeof(Screens.Monitoring)) && serialPort.IsOpen)
+                    if(SearchPanelContent(typeof(Screens.Monitoring)) && serial.IsOpen)
                     {
-                        OpenChildForm(new Screens.Settings(serialPort),sender);
+                        OpenChildForm(new Screens.Settings(serial,smt),sender);
                         SetButtonColors((System.Windows.Forms.Button)sender);
                     }
                     else
@@ -504,6 +522,7 @@ namespace CESATAutomationDevelop
                     }
                 }
             }
+             */
         }
         private bool SearchUSBIO(string name)
         {
@@ -541,7 +560,7 @@ namespace CESATAutomationDevelop
         /// <param name="e"></param>
         private void buttonClose_MouseEnter(object sender, EventArgs e)
         {
-            buttonClose.BackgroundImage = Properties.Resources.icons8_close_window_96_red;
+            buttonClose.BackgroundImage = Properties.Resources.close_window_96_red;
         }
         /// <summary>
         /// Changes the buttonClose image when the mouse leaves the button.
@@ -550,7 +569,7 @@ namespace CESATAutomationDevelop
         /// <param name="e"></param>
         private void buttonClose_MouseLeave(object sender, EventArgs e)
         {
-            buttonClose.BackgroundImage = Properties.Resources.icons8_close_window_96_gray;
+            buttonClose.BackgroundImage = Properties.Resources.close_window_96_gray;
         }
         /// <summary>
         /// Changes the buttonCloseTab image when the mouse enter across the button

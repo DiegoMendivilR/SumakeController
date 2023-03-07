@@ -13,6 +13,14 @@ namespace CESATAutomationDevelop
         public event EventHandler RS232DataReceived;
         #endregion
         #region CONSTRUCTORS
+        public RS232()
+        {
+            BaudRate = int.Parse("115200");
+            DataBits = int.Parse("8");
+            StopBits = (StopBits)Enum.Parse(typeof(StopBits), "1");
+            Parity = (Parity)Enum.Parse(typeof(Parity), "None");
+            DataReceived += SerialDataReceived;
+        }
         public RS232(string portName)
         {
             PortName = portName;

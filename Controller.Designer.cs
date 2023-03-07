@@ -36,13 +36,13 @@ namespace CESATAutomationDevelop
             this.buttonFixture = new System.Windows.Forms.Button();
             this.buttonSettings = new System.Windows.Forms.Button();
             this.buttonMonitor = new System.Windows.Forms.Button();
-            this.panelLogo = new System.Windows.Forms.Panel();
             this.panelTitle = new System.Windows.Forms.Panel();
             this.label12 = new System.Windows.Forms.Label();
-            this.buttonClose = new System.Windows.Forms.Button();
             this.panelBottom = new System.Windows.Forms.Panel();
             this.panelRight = new System.Windows.Forms.Panel();
             this.panelContent = new System.Windows.Forms.Panel();
+            this.buttonClose = new System.Windows.Forms.Button();
+            this.panelLogo = new System.Windows.Forms.Panel();
             this.panelMenu.SuspendLayout();
             this.panelTitle.SuspendLayout();
             this.SuspendLayout();
@@ -70,7 +70,7 @@ namespace CESATAutomationDevelop
             this.buttonIOCard.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonIOCard.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonIOCard.ForeColor = System.Drawing.Color.White;
-            this.buttonIOCard.Image = global::CESATAutomationDevelop.Properties.Resources.icons8_chip_white_24;
+            this.buttonIOCard.Image = global::CESATAutomationDevelop.Properties.Resources.chip_white_24;
             this.buttonIOCard.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonIOCard.Location = new System.Drawing.Point(0, 262);
             this.buttonIOCard.Name = "buttonIOCard";
@@ -92,7 +92,7 @@ namespace CESATAutomationDevelop
             this.buttonFixture.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonFixture.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonFixture.ForeColor = System.Drawing.Color.White;
-            this.buttonFixture.Image = ((System.Drawing.Image)(resources.GetObject("buttonFixture.Image")));
+            this.buttonFixture.Image = global::CESATAutomationDevelop.Properties.Resources.fixture_24_white;
             this.buttonFixture.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonFixture.Location = new System.Drawing.Point(0, 208);
             this.buttonFixture.Name = "buttonFixture";
@@ -114,7 +114,7 @@ namespace CESATAutomationDevelop
             this.buttonSettings.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonSettings.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonSettings.ForeColor = System.Drawing.Color.White;
-            this.buttonSettings.Image = ((System.Drawing.Image)(resources.GetObject("buttonSettings.Image")));
+            this.buttonSettings.Image = global::CESATAutomationDevelop.Properties.Resources.wrench_24_white;
             this.buttonSettings.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonSettings.Location = new System.Drawing.Point(0, 154);
             this.buttonSettings.Name = "buttonSettings";
@@ -136,7 +136,7 @@ namespace CESATAutomationDevelop
             this.buttonMonitor.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonMonitor.Font = new System.Drawing.Font("Lucida Sans Unicode", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.buttonMonitor.ForeColor = System.Drawing.Color.White;
-            this.buttonMonitor.Image = ((System.Drawing.Image)(resources.GetObject("buttonMonitor.Image")));
+            this.buttonMonitor.Image = global::CESATAutomationDevelop.Properties.Resources.monitoring_24_white;
             this.buttonMonitor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.buttonMonitor.Location = new System.Drawing.Point(0, 100);
             this.buttonMonitor.Name = "buttonMonitor";
@@ -148,17 +148,6 @@ namespace CESATAutomationDevelop
             this.buttonMonitor.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.buttonMonitor.UseVisualStyleBackColor = false;
             this.buttonMonitor.Click += new System.EventHandler(this.buttonMenu_Click);
-            // 
-            // panelLogo
-            // 
-            this.panelLogo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelLogo.BackgroundImage")));
-            this.panelLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelLogo.Location = new System.Drawing.Point(0, 0);
-            this.panelLogo.Name = "panelLogo";
-            this.panelLogo.Size = new System.Drawing.Size(200, 100);
-            this.panelLogo.TabIndex = 30;
-            this.panelLogo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitle_MouseDown);
             // 
             // panelTitle
             // 
@@ -186,24 +175,6 @@ namespace CESATAutomationDevelop
             this.label12.Text = "Automation";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label12.MouseDown += new System.Windows.Forms.MouseEventHandler(this.label12_MouseDown);
-            // 
-            // buttonClose
-            // 
-            this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonClose.BackgroundImage")));
-            this.buttonClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonClose.FlatAppearance.BorderSize = 0;
-            this.buttonClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
-            this.buttonClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
-            this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.buttonClose.Location = new System.Drawing.Point(753, 3);
-            this.buttonClose.Name = "buttonClose";
-            this.buttonClose.Size = new System.Drawing.Size(26, 26);
-            this.buttonClose.TabIndex = 0;
-            this.buttonClose.UseVisualStyleBackColor = true;
-            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
-            this.buttonClose.MouseEnter += new System.EventHandler(this.buttonClose_MouseEnter);
-            this.buttonClose.MouseLeave += new System.EventHandler(this.buttonClose_MouseLeave);
             // 
             // panelBottom
             // 
@@ -233,7 +204,36 @@ namespace CESATAutomationDevelop
             this.panelContent.Size = new System.Drawing.Size(771, 390);
             this.panelContent.TabIndex = 30;
             // 
-            // SMTC1Controller
+            // buttonClose
+            // 
+            this.buttonClose.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonClose.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonClose.BackgroundImage")));
+            this.buttonClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonClose.FlatAppearance.BorderSize = 0;
+            this.buttonClose.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.buttonClose.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.buttonClose.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonClose.Location = new System.Drawing.Point(753, 3);
+            this.buttonClose.Name = "buttonClose";
+            this.buttonClose.Size = new System.Drawing.Size(26, 26);
+            this.buttonClose.TabIndex = 0;
+            this.buttonClose.UseVisualStyleBackColor = true;
+            this.buttonClose.Click += new System.EventHandler(this.buttonClose_Click);
+            this.buttonClose.MouseEnter += new System.EventHandler(this.buttonClose_MouseEnter);
+            this.buttonClose.MouseLeave += new System.EventHandler(this.buttonClose_MouseLeave);
+            // 
+            // panelLogo
+            // 
+            this.panelLogo.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("panelLogo.BackgroundImage")));
+            this.panelLogo.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.panelLogo.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelLogo.Location = new System.Drawing.Point(0, 0);
+            this.panelLogo.Name = "panelLogo";
+            this.panelLogo.Size = new System.Drawing.Size(200, 100);
+            this.panelLogo.TabIndex = 30;
+            this.panelLogo.MouseDown += new System.Windows.Forms.MouseEventHandler(this.panelTitle_MouseDown);
+            // 
+            // Controller
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(983, 500);
@@ -244,7 +244,7 @@ namespace CESATAutomationDevelop
             this.Controls.Add(this.panelContent);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MinimumSize = new System.Drawing.Size(800, 500);
-            this.Name = "SMTC1Controller";
+            this.Name = "Controller";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "SMT-C1 Controller";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SMTC1Controller_FormClosing);

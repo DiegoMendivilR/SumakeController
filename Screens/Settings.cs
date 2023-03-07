@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,12 +13,14 @@ namespace CESATAutomationDevelop.Screens
 {
     public partial class Settings : Form
     {
-        SerialSmtC1 serialPort;
-        public Settings(SerialSmtC1 serialPort)
+        RS232 serial;
+        SmtC1 smt;
+        public Settings(RS232 serial, SmtC1 smt)
         {
-            this.serialPort = serialPort;
+            this.serial = serial;
             InitializeComponent();
 
+            comboPorts.DataSource = SerialPort.GetPortNames();
             comboMode.DataSource = Enum.GetNames(typeof(Mode));
             comboLanguage.DataSource = Enum.GetNames(typeof(Language));
             comboOkAllSignal.DataSource = Enum.GetNames(typeof(OkAllSignal));
@@ -52,7 +55,7 @@ namespace CESATAutomationDevelop.Screens
                 control.Enabled = false;
             }
 
-            serialPort.CMD108Delayed();
+            //serial.CMD108Delayed();
             Task.Delay(1500).ContinueWith((task) =>
             {
                 EnableUI();
@@ -65,42 +68,42 @@ namespace CESATAutomationDevelop.Screens
         }
         internal void UpdateUi()
         {
-            ThreadHelperClass.SetText(this, comboBarcodeEnable, serialPort.BarcodeEnable.ToString());
-            ThreadHelperClass.SetText(this, comboBatchMode, serialPort.BatchMode.ToString());
-            ThreadHelperClass.SetText(this, comboTorqueUnit, serialPort.TorqueUnit.ToString());
-            ThreadHelperClass.SetText(this, comboGateMode,serialPort.GateMode.ToString());
-            ThreadHelperClass.SetText(this, comboMode, serialPort.Mode.ToString());
-            ThreadHelperClass.SetText(this, comboStartSignalMode, serialPort.StartSignalMode.ToString());
-            ThreadHelperClass.SetText(this, comboOkAllSignal, serialPort.OkAllSignal.ToString());
-            ThreadHelperClass.SetText(this, comboInternetSettings, serialPort.InternetSettings.ToString());
-            ThreadHelperClass.SetText(this, comboBuzzerMode, serialPort.BuzzerMode.ToString());
-            ThreadHelperClass.SetText(this, comboLanguage, serialPort.Language.ToString());
-            ThreadHelperClass.SetText(this, comboLedMode, serialPort.LedMode.ToString());
-            ThreadHelperClass.SetText(this, comboStartMode, serialPort.StartMode.ToString());
-            ThreadHelperClass.SetNumericUpDown(this, numericDeviceId, serialPort.DeviceID);
+            ThreadHelperClass.SetText(this, comboBarcodeEnable, smt.BarcodeEnable.ToString());
+            ThreadHelperClass.SetText(this, comboBatchMode, smt.BatchMode.ToString());
+            ThreadHelperClass.SetText(this, comboTorqueUnit, smt.TorqueUnit.ToString());
+            ThreadHelperClass.SetText(this, comboGateMode,smt.GateMode.ToString());
+            ThreadHelperClass.SetText(this, comboMode, smt.Mode.ToString());
+            ThreadHelperClass.SetText(this, comboStartSignalMode, smt.StartSignalMode.ToString());
+            ThreadHelperClass.SetText(this, comboOkAllSignal, smt.OkAllSignal.ToString());
+            ThreadHelperClass.SetText(this, comboInternetSettings, smt.InternetSettings.ToString());
+            ThreadHelperClass.SetText(this, comboBuzzerMode, smt.BuzzerMode.ToString());
+            ThreadHelperClass.SetText(this, comboLanguage, smt.Language.ToString());
+            ThreadHelperClass.SetText(this, comboLedMode, smt.LedMode.ToString());
+            ThreadHelperClass.SetText(this, comboStartMode, smt.StartMode.ToString());
+            ThreadHelperClass.SetNumericUpDown(this, numericDeviceId, smt.DeviceID);
         }
 
         private void buttonSave_Click(object sender, EventArgs e)
         {
-            serialPort.DeviceID = Decimal.ToInt32(numericDeviceId.Value);
-            serialPort.Mode = (Mode)Enum.Parse(typeof(Mode), comboMode.Text);
-            serialPort.Language = (Language)Enum.Parse(typeof(Language), comboLanguage.Text);
-            serialPort.OkAllSignal = (OkAllSignal)Enum.Parse(typeof(OkAllSignal), comboOkAllSignal.Text);
-            serialPort.BatchMode = (BatchMode)Enum.Parse(typeof(BatchMode), comboBatchMode.Text);
-            serialPort.TorqueUnit = (TorqueUnit)Enum.Parse(typeof(TorqueUnit), comboTorqueUnit.Text);
-            serialPort.GateMode = (GateMode)Enum.Parse(typeof(GateMode), comboGateMode.Text);
-            serialPort.BuzzerMode = (BuzzerMode)Enum.Parse(typeof(BuzzerMode), comboBuzzerMode.Text);
-            serialPort.LedMode = (LedMode)Enum.Parse(typeof(LedMode), comboLedMode.Text);
-            serialPort.StartMode = (StartMode)Enum.Parse(typeof(StartMode), comboStartMode.Text);
-            serialPort.BarcodeEnable = (BarcodeEnable)Enum.Parse(typeof(BarcodeEnable), comboBarcodeEnable.Text);
-            serialPort.StartSignalMode = (StartSignalMode)Enum.Parse(typeof(StartSignalMode), comboStartSignalMode.Text);
-            serialPort.CMD103();
+            smt.DeviceID = Decimal.ToInt32(numericDeviceId.Value);
+            smt.Mode = (Mode)Enum.Parse(typeof(Mode), comboMode.Text);
+            smt.Language = (Language)Enum.Parse(typeof(Language), comboLanguage.Text);
+            smt.OkAllSignal = (OkAllSignal)Enum.Parse(typeof(OkAllSignal), comboOkAllSignal.Text);
+            smt.BatchMode = (BatchMode)Enum.Parse(typeof(BatchMode), comboBatchMode.Text);
+            smt.TorqueUnit = (TorqueUnit)Enum.Parse(typeof(TorqueUnit), comboTorqueUnit.Text);
+            smt.GateMode = (GateMode)Enum.Parse(typeof(GateMode), comboGateMode.Text);
+            smt.BuzzerMode = (BuzzerMode)Enum.Parse(typeof(BuzzerMode), comboBuzzerMode.Text);
+            smt.LedMode = (LedMode)Enum.Parse(typeof(LedMode), comboLedMode.Text);
+            smt.StartMode = (StartMode)Enum.Parse(typeof(StartMode), comboStartMode.Text);
+            smt.BarcodeEnable = (BarcodeEnable)Enum.Parse(typeof(BarcodeEnable), comboBarcodeEnable.Text);
+            smt.StartSignalMode = (StartSignalMode)Enum.Parse(typeof(StartSignalMode), comboStartSignalMode.Text);
+            smt.CMD103();
             //logSettings();
         }
         private void logSettings()
         {
-            Console.WriteLine(String.Format(stringCommandHelper(12),serialPort.DeviceID,serialPort.Mode,serialPort.Language,serialPort.OkAllSignal,serialPort.BatchMode,serialPort.TorqueUnit,serialPort.GateMode,serialPort.BuzzerMode,serialPort.LedMode,serialPort.StartMode,serialPort.BarcodeEnable,serialPort.StartSignalMode));
-            Console.WriteLine(String.Format(stringCommandHelper(12),(int)serialPort.DeviceID,(int)serialPort.Mode,(int)serialPort.Language,(int)serialPort.OkAllSignal,(int)serialPort.BatchMode,(int)serialPort.TorqueUnit,(int)serialPort.GateMode,(int)serialPort.BuzzerMode,(int)serialPort.LedMode,(int)serialPort.StartMode,(int)serialPort.BarcodeEnable,(int)serialPort.StartSignalMode));
+            Console.WriteLine(String.Format(stringCommandHelper(12),smt.DeviceID,smt.Mode,smt.Language,smt.OkAllSignal,smt.BatchMode,smt.TorqueUnit,smt.GateMode,smt.BuzzerMode,smt.LedMode,smt.StartMode,smt.BarcodeEnable,smt.StartSignalMode));
+            Console.WriteLine(String.Format(stringCommandHelper(12),(int)smt.DeviceID,(int)smt.Mode,(int)smt.Language,(int)smt.OkAllSignal,(int)smt.BatchMode,(int)smt.TorqueUnit,(int)smt.GateMode,(int)smt.BuzzerMode,(int)smt.LedMode,(int)smt.StartMode,(int)smt.BarcodeEnable,(int)smt.StartSignalMode));
         }
         private string stringCommandHelper(int no)
         {
@@ -110,6 +113,19 @@ namespace CESATAutomationDevelop.Screens
                 s += "{" + x + "},";
             }
             return s;
+        }
+
+        private void btnOpenPort_Click(object sender, EventArgs e)
+        {
+            /*
+            if (serial.IsOpen) serial.ClosePort();
+            else serial.OpenPort(comboPorts.Text);
+            if (serial.IsOpen) btnOpenPort.Text = "&Close Port";
+            else btnOpenPort.Text = "&Open Port";
+            if (serial.IsOpen) serial.CMD100();
+
+            serial.CMD121();
+             */
         }
     }
 }

@@ -73,7 +73,17 @@
   <ItemGroup>
     <Compile Include="bak\CommunicationCommands.cs" />
     <Compile Include="bak\JulianDay.cs" />
+    <Compile Include="ButtonMenuForm.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="CobotSimulated.cs" />
+    <None Include="icons\chip-white-24.png" />
+    <None Include="icons\close-window-96-gray.png" />
+    <None Include="icons\close-window-96-red.png" />
+    <None Include="icons\piece-24-white.png" />
+    <None Include="icons\robot-arm-24-white.png" />
+    <None Include="icons\support-24-white.png" />
+    <None Include="icons\widescreen-24-white.png" />
     <Content Include="log.txt" />
     <Compile Include="RS232.cs">
       <SubType>Component</SubType>

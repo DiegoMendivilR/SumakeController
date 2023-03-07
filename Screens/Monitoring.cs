@@ -13,10 +13,12 @@ namespace CESATAutomationDevelop.Screens
 {
     public partial class Monitoring : Form
     {
-        SerialSmtC1 sumakeSerial = null;
-        public Monitoring(SerialSmtC1 sumakeSerial)
+        RS232 serial;
+        SmtC1 smt;
+        public Monitoring(RS232 serial, SmtC1 smt)
         {
-            this.sumakeSerial = sumakeSerial;
+            this.serial = serial;
+            this.smt = smt;
             InitializeComponent();
             comboPorts.DataSource = SerialPort.GetPortNames();
             btnOpenPort.BackColor = Theme.Blend(Theme.ContrastGray, Theme.EatonBlue, Theme.ThemeMultiplier);
@@ -57,11 +59,11 @@ namespace CESATAutomationDevelop.Screens
         public void SetTorque(string torque) => ThreadHelperClass.SetText(this, lblTorque, torque);
         internal void UpdateUi()
         {
-            ThreadHelperClass.SetText(this, lblJob, sumakeSerial.Job.ToString());
-            ThreadHelperClass.SetText(this, lblJs, sumakeSerial.JobSequence.ToString());
-            ThreadHelperClass.SetText(this, lblTp, sumakeSerial.TighteningProgram.ToString());
-            ThreadHelperClass.SetText(this, lblScrewdriverIdCode, sumakeSerial.ScrewdriverIDCode.ToString());
-            ThreadHelperClass.SetText(this, lblScrewdriverStatus, sumakeSerial.ScrewdriverStatus.ToString());
+            ThreadHelperClass.SetText(this, lblJob, smt.Job.ToString());
+            ThreadHelperClass.SetText(this, lblJs, smt.JobSequence.ToString());
+            ThreadHelperClass.SetText(this, lblTp, smt.TighteningProgram.ToString());
+            ThreadHelperClass.SetText(this, lblScrewdriverIdCode, smt.ScrewdriverIDCode.ToString());
+            ThreadHelperClass.SetText(this, lblScrewdriverStatus, smt.ScrewdriverStatus.ToString());
         }
         private async void txtInput_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -94,13 +96,15 @@ namespace CESATAutomationDevelop.Screens
         }
         private void btnOpenPort_Click(object sender, EventArgs e)
         {
-            if (sumakeSerial.IsOpen) sumakeSerial.ClosePort();
-            else sumakeSerial.OpenPort(comboPorts.Text);
-            if (sumakeSerial.IsOpen) btnOpenPort.Text = "&Close Port";
+            /*
+            if (serial.IsOpen) serial.ClosePort();
+            else serial.OpenPort(comboPorts.Text);
+            if (serial.IsOpen) btnOpenPort.Text = "&Close Port";
             else btnOpenPort.Text = "&Open Port";
-            if (sumakeSerial.IsOpen) sumakeSerial.CMD100();
+            if (serial.IsOpen) serial.CMD100();
 
-            sumakeSerial.CMD121();
+            serial.CMD121();
+             */
         }
         /// <summary>
         /// Changing Job and JobSequence for the Sumake.
@@ -109,7 +113,7 @@ namespace CESATAutomationDevelop.Screens
         /// <param name="e"></param>
         private void btnChangeJob_Click(object sender, EventArgs e)
         {
-            sumakeSerial.CMD104(Decimal.ToInt32(numJ.Value), Decimal.ToInt32(numJS.Value));
+            //serial.CMD104(Decimal.ToInt32(numJ.Value), Decimal.ToInt32(numJS.Value));
         }
     }
 }
